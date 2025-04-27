@@ -131,4 +131,4 @@ INSERT INTO users (username, password_hash, email, fullname, phone, role, dob, g
 INSERT INTO categories (name) VALUES
     ('PLANET'),
     ('CONSTELLATION'),
-    ('PLANET');
+    ('COMET');
