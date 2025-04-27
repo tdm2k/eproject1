@@ -125,4 +125,10 @@ CREATE TABLE book_categories (
  -- Tài khoản admin
  -- Mật khẩu 123123
 INSERT INTO users (username, password_hash, email, fullname, phone, role, dob, gender) VALUES
-    ('admin', '$2y$12$bGpsc9JcHQb55tf2va70G.40jggJYn4cPXxl7YUxZ3ti/Se4wuMYO', 'admin@space.com', 'Administrator', '0968686868', 'admin', '2000-08-02', 0)
+    ('admin', '$2y$12$bGpsc9JcHQb55tf2va70G.40jggJYn4cPXxl7YUxZ3ti/Se4wuMYO', 'admin@space.com', 'Administrator', '0968686868', 'admin', '2000-08-02', 0);
+
+-- Tạo 3 categories chính
+INSERT INTO categories (name) VALUES
+    ('PLANET'),
+    ('CONSTELLATION'),
+    ('PLANET');
