@@ -43,12 +43,27 @@ if (session_status() === PHP_SESSION_NONE) {
 
     <!-- Page Content -->
     <div class="container" style="margin-top: 6%">
+
+        <!-- Success Notification -->
         <?php if (isset($_GET['status']) && $_GET['status'] === 'logged-out'): ?>
             <div class="alert alert-success success-notification show" role="alert">
                 <i class="bi bi-check-circle-fill me-2"></i> Logged out successfully!
             </div>
         <?php endif; ?>
+
+        <!-- Error Notification -->
+        <?php if (isset($_GET['error'])):
+            $error = $_GET['error']; ?>
+            <div class="alert alert-danger error-notification show" role="alert">
+                <i class="bi bi-x-circle-fill me-2"></i>
+                <?php echo htmlspecialchars($error); ?>
+            </div>
+        <?php endif; ?>
+
         <p>Welcome</p>
+
+        <!-- Catalogue -->
+        <?php include('includes/Catalogue.html'); ?>
     </div>
 
     <!-- Footer -->
@@ -67,6 +82,18 @@ if (session_status() === PHP_SESSION_NONE) {
                     successNotification.classList.add('show');
                     setTimeout(function() {
                         successNotification.classList.remove('show');
+                    }, 3000); // 3 giây
+                }, 100);
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const errorNotification = document.querySelector('.error-notification');
+            if (errorNotification) {
+                setTimeout(function() {
+                    errorNotification.classList.add('show');
+                    setTimeout(function() {
+                        errorNotification.classList.remove('show');
                     }, 3000); // 3 giây
                 }, 100);
             }
