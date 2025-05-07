@@ -32,6 +32,23 @@ if (session_status() === PHP_SESSION_NONE) {
             opacity: 1;
             transform: translateX(0);
         }
+
+        .error-notification {
+            position: fixed;
+            top: auto;
+            bottom: 20px;
+            left: auto;
+            right: 20px;
+            z-index: 1055;
+            opacity: 0;
+            transform: translateX(30px);
+            transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+        }
+
+        .error-notification.show {
+            opacity: 1;
+            transform: translateX(0);
+        }
     </style>
 </head>
 
