@@ -4,7 +4,7 @@ class Connection
     private $host = "localhost";
     private $username = "root";
     private $password = "12345678";
-    private $dbname = "eproject";
+    private $dbname = "eproject1";
     private $conn;
 
     public function __construct()

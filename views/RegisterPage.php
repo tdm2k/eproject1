@@ -170,6 +170,15 @@ if (session_status() === PHP_SESSION_NONE) {
                     </div>
                 </div>
 
+                <?php
+                if (isset($_GET['error'])):
+                    $error = $_GET['error'];
+                ?>
+                    <div class="alert alert-danger" role="alert">
+                        <i class="bi bi-x-circle-fill me-2"></i>
+                        <?php echo htmlspecialchars($error); ?>
+                    </div>
+                <?php endif; ?>
                 <button type="submit" class="btn btn-primary w-100 mt-3">Register</button>
 
                 <div class="mt-4 text-center">
@@ -182,7 +191,6 @@ if (session_status() === PHP_SESSION_NONE) {
     <script src="../vendor/jquery/jquery.min.js"></script>
     <script src="../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Optional: Basic password match check
         const password = document.getElementById('password');
         const confirmPassword = document.getElementById('confirm_password');
         const form = document.querySelector('.registration-form');
@@ -190,7 +198,6 @@ if (session_status() === PHP_SESSION_NONE) {
         form.addEventListener('submit', function(event) {
             if (password.value !== confirmPassword.value) {
                 alert('Passwords do not match!');
-                // Có thể thêm class lỗi cho input confirmPassword
                 confirmPassword.focus();
                 event.preventDefault(); // Stop form submission
             }

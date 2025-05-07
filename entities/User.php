@@ -23,7 +23,8 @@ class User
         ?string $phone = null,
         ?string $role = null,
         ?DateTime $dob = null,
-        ?int $gender = null // Sử dụng int cho gender
+        ?int $gender = null, // Sử dụng int cho gender
+        ?int $id = null
     ) {
         $this->password_hash = $password_hash;
         $this->username = $username;
@@ -33,6 +34,7 @@ class User
         $this->role = $role;
         $this->dob = $dob;
         $this->gender = $gender;
+        $this->id = $id;
     }
 
     // --- Getters ---

@@ -53,6 +53,23 @@ if (session_status() === PHP_SESSION_NONE) {
             border-color: #80bdff;
         }
 
+        .success-notification {
+            position: fixed;
+            top: auto;
+            bottom: 20px;
+            left: auto;
+            right: 20px;
+            z-index: 1055;
+            opacity: 0;
+            transform: translateX(30px);
+            transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+        }
+
+        .success-notification.show {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
         /* --- Responsive đơn giản --- */
         @media (max-width: 767.98px) {
             .login-form-wrapper {
@@ -90,6 +107,16 @@ if (session_status() === PHP_SESSION_NONE) {
     <div class="container login-container">
         <div class="login-form-wrapper">
             <h2>Login</h2>
+            <?php if (isset($_GET['error']) && $_GET['error'] === 'invalid_credentials'): ?>
+                <div class="alert alert-danger" role="alert">
+                    <i class="bi bi-x-circle-fill me-2"></i> Invalid username or password!
+                </div>
+            <?php endif; ?>
+            <?php if (isset($_GET['success']) && $_GET['success'] === 'registered'): ?>
+                <div class="alert alert-success success-notification show" role="alert">
+                    <i class="bi bi-check-circle-fill me-2"></i> User registered successfully! Please login.
+                </div>
+            <?php endif; ?>
             <form action="../../controllers/UserController.php?action=login" method="post">
                 <div class="mb-3">
                     <label for="username" class="form-label">Username or Email</label>
@@ -109,7 +136,19 @@ if (session_status() === PHP_SESSION_NONE) {
 
     <script src="../vendor/jquery/jquery.min.js"></script>
     <script src="../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const successNotification = document.querySelector('.success-notification');
+            if (successNotification) {
+                setTimeout(function() {
+                    successNotification.classList.add('show');
+                    setTimeout(function() {
+                        successNotification.classList.remove('show');
+                    }, 3000); // 3 giây
+                }, 100);
+            }
+        });
+    </script>
 </body>
 
 </html>

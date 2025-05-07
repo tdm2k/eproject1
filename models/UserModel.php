@@ -34,29 +34,35 @@ class UserModel
     // Update User
     public function updateUser(User $user): bool
     {
-        $sql = "UPDATE users SET 
-                username = :username, 
-                password_hash = :password_hash, 
-                email = :email, 
-                fullname = :fullname, 
-                phone = :phone, 
-                role = :role, 
-                dob = :dob, 
-                gender = :gender, 
-                WHERE id = :id";
+        $sql = "UPDATE users SET
+                    username = :username,
+                    email = :email,
+                    fullname = :fullname,
+                    phone = :phone,
+                    role = :role,
+                    dob = :dob,
+                    gender = :gender
+                    WHERE id = :id";
 
         $stmt = $this->conn->getConnection()->prepare($sql);
 
-        // Bind parameters
-        $stmt->bindParam(':id', $user->getId());
-        $stmt->bindParam(':username', $user->getUsername());
-        $stmt->bindParam(':password_hash', $user->getPasswordHash());
-        $stmt->bindParam(':email', $user->getEmail());
-        $stmt->bindParam(':fullname', $user->getFullname());
-        $stmt->bindParam(':phone', $user->getPhone());
-        $stmt->bindParam(':role', $user->getRole());
-        $stmt->bindParam(':dob', $user->getDob()->format('Y-m-d'));
-        $stmt->bindParam(':gender', $user->getGender());
+        $id = $user->getId();
+        $username = $user->getUsername();
+        $email = $user->getEmail();
+        $fullname = $user->getFullname();
+        $phone = $user->getPhone();
+        $role = $user->getRole();
+        $dob = $user->getDob() ? $user->getDob()->format('Y-m-d') : null;
+        $gender = $user->getGender();
+
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+        $stmt->bindParam(':username', $username);
+        $stmt->bindParam(':email', $email);
+        $stmt->bindParam(':fullname', $fullname);
+        $stmt->bindParam(':phone', $phone);
+        $stmt->bindParam(':role', $role);
+        $stmt->bindParam(':dob', $dob);
+        $stmt->bindParam(':gender', $gender, PDO::PARAM_INT);
 
         return $stmt->execute();
     }
@@ -84,24 +90,6 @@ class UserModel
         $data = $stmt->fetch(PDO::FETCH_ASSOC);
 
         return $data ? User::fromArray($data) : null;
-    }
-
-    // Get all Users
-    public function getAllUsers(): array
-    {
-        $sql = "SELECT * FROM users";
-
-        $stmt = $this->conn->getConnection()->prepare($sql);
-        $stmt->execute();
-
-        $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-        $users = [];
-        foreach ($data as $userData) {
-            $users[] = User::fromArray($userData);
-        }
-
-        return $users;
     }
 
     // Find User by Username
@@ -144,5 +132,35 @@ class UserModel
         $data = $stmt->fetch(PDO::FETCH_ASSOC);
 
         return $data ? User::fromArray($data) : null;
+    }
+
+    // Get all Users
+    public function getAllUsers(): array
+    {
+        $sql = "SELECT * FROM users";
+
+        $stmt = $this->conn->getConnection()->prepare($sql);
+        $stmt->execute();
+
+        $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $users = [];
+        foreach ($data as $userData) {
+            $users[] = User::fromArray($userData);
+        }
+
+        return $users;
+    }
+
+    // Change password
+    public function changePassword(int $userId, string $newPassword): bool
+    {
+        $sql = "UPDATE users SET password_hash = :newPassword WHERE id = :userId";
+
+        $stmt = $this->conn->getConnection()->prepare($sql);
+        $stmt->bindParam(':userId', $userId);
+        $stmt->bindParam(':newPassword', $newPassword);
+
+        return $stmt->execute();
     }
 }

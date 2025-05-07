@@ -5,31 +5,192 @@ if (session_status() === PHP_SESSION_NONE) {
 require_once '../models/UserModel.php';
 require_once '../entities/User.php';
 
+$userModel = new UserModel();
+
 $action = $_GET['action'] ?? null;
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-
-    $userModel = new UserModel(); // Khởi tạo model
-
     switch ($action) {
         case 'login':
             handleLogin($userModel);
             break;
-
         case 'register':
             handleRegister($userModel);
             break;
-
+        case 'update':
+            handleUpdate($userModel);
+            break;
+        case 'delete':
+            handleDelete($userModel);
+            break;
+        case 'change-password':
+            handleChangePassword($userModel);
         default:
-            echo "Invalid action requested.";
+            header('Location: ../views/LoginPage.php');
             exit;
     }
 } else {
-    if ($action === 'logout') {
-        handleLogout();
-    } else {
+    switch ($action) {
+        case 'logout':
+            handleLogout();
+            break;
+        case 'delete':
+            handleDelete($userModel);
+            break;
+        default:
+            header('Location: ../views/LoginPage.php');
+            exit;
+    }
+}
 
-        header('Location: ../views/LoginPage.php');
+// --- Hàm xử lý Update ---
+function handleUpdate(UserModel $userModel)
+{
+    $userId = $_POST['id'];
+
+    if ($userId) {
+        $username = trim($_POST['username'] ?? '');
+        $email = trim($_POST['email'] ?? '');
+        $fullname = trim($_POST['fullname'] ?? '');
+        $phone = trim($_POST['phone'] ?? '');
+        $role = $_POST['role'] ?? 'customer';
+        $dobString = $_POST['dob'] ?? null;
+        $gender = $_POST['gender'] ?? null;
+
+        $errors = [];
+        if (empty($username)) {
+            $errors[] = 'Username cannot be empty.';
+        }
+        if (empty($email)) {
+            $errors[] = 'Email cannot be empty.';
+        } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $errors[] = 'Invalid email format.';
+        }
+
+        $existingUser = $userModel->findUserById($userId);
+        if (!$existingUser) {
+            $errors[] = 'User not found.';
+        }
+
+        $dob = null;
+        if (!empty($dobString)) {
+            try {
+                $dob = new DateTime($dobString);
+            } catch (Exception $e) {
+                $errors[] = 'Invalid date of birth format.';
+                exit;
+            }
+        }
+
+        if (!empty($errors)) {
+            $error_param = urlencode($errors[0]);
+            header("Location: ../admin/AdminUser.php?error=$error_param");
+            exit;
+        }
+
+        $genderInt = null;
+        if ($gender !== null) {
+            $genderInt = (int) $gender;
+        }
+
+        $updatedUser = new User(
+            $existingUser->getPasswordHash(),
+            $username,
+            $email,
+            $fullname,
+            $phone,
+            $role,
+            $dob,
+            $genderInt,
+            $userId
+        );
+
+        $success = $userModel->updateUser($updatedUser);
+
+        if ($success) {
+            header('Location: ../admin/AdminUser.php?action=userList&status=user-updated');
+            exit;
+        } else {
+            header('Location: ../admin/AdminUser.php?action=userList&error=user-not-updated');
+            exit;
+        }
+    } else {
+        header('Location: ../admin/AdminUser.php?action=userList&error=invalid-user-id');
+        exit;
+    }
+}
+
+// --- Hàm xử lý Delete ---
+function handleDelete(UserModel $userModel)
+{
+    $userId = $_GET['id'] ?? $_POST['id'] ?? null;
+
+    if ($userId) {
+        $success = $userModel->deleteUser($userId);
+
+        if ($success) {
+            header('Location: ../admin/AdminUser.php?action=userList&status=user-deleted');
+            exit;
+        } else {
+            header('Location: ../admin/AdminUser.php?action=userList&error=user-not-deleted');
+            exit;
+        }
+    } else {
+        header('Location: ../admin/AdminUser.php?action=userList&error=invalid-user-id');
+        exit;
+    }
+}
+
+// --- Hàm xử lý thay đổi mật khẩu ---
+function handleChangePassword(UserModel $userModel)
+{
+    $userId = $_POST['id'];
+    $oldPassword = $_POST['old_password'] ?? '';
+    $newPassword = $_POST['password'] ?? '';
+    $confirmPassword = $_POST['confirm_password'] ?? '';
+
+    $errors = [];
+    if (!$userId) {
+        $errors[] = 'User ID is required.';
+        exit;
+    }
+
+    if (empty($oldPassword) || empty($newPassword) || empty($confirmPassword)) {
+        $errors[] = 'All fields are required.';
+        exit;
+    }
+
+    if ($newPassword !== $confirmPassword) {
+        $errors[] = 'Passwords do not match.';
+        exit;
+    }
+
+
+    $user = $userModel->findUserById($userId);
+
+    if (!$user) {
+        $errors[] = 'User not found.';
+        exit;
+    }
+
+    if (!password_verify($oldPassword, $user->getPasswordHash())) {
+        $errors[] = 'Old password is incorrect.';
+        exit;
+    }
+
+    if (!empty($errors)) {
+        $error_param = urlencode($errors[0]);
+        header("Location: ../admin/AdminUser.php?error=$error_param");
+        exit;
+    }
+
+    $newPasswordHash = password_hash($newPassword, PASSWORD_DEFAULT);
+    $success = $userModel->changePassword($userId, $newPasswordHash);
+
+    if ($success) {
+        header('Location: ../admin/AdminUser.php?action=userList&status=password-updated');
+        exit;
+    } else {
+        header('Location: ../admin/AdminUser.php?action=userList&error=password-not-updated');
         exit;
     }
 }
@@ -40,7 +201,6 @@ function handleLogin(UserModel $userModel)
     $identifier = trim($_POST['username'] ?? '');
     $password = $_POST['password'] ?? '';
 
-    // Validation cơ bản
     if (empty($identifier) || empty($password)) {
         header('Location: ../views/LoginPage.php?error=empty_fields');
         exit;
@@ -70,14 +230,13 @@ function handleLogin(UserModel $userModel)
 // --- Hàm xử lý Register ---
 function handleRegister(UserModel $userModel)
 {
-    // Lấy dữ liệu từ POST
     $username = trim($_POST['username'] ?? '');
     $password = $_POST['password'] ?? '';
     $confirm_password = $_POST['confirm_password'] ?? '';
     $email = trim($_POST['email'] ?? '');
     $fullname = trim($_POST['fullname'] ?? '');
-    $phone = trim($_POST['phone'] ?? ''); // Optional
-    $dob_string = $_POST['dob'] ?? ''; // Date string
+    $phone = trim($_POST['phone'] ?? '');
+    $dob_string = $_POST['dob'] ?? '';
     $gender = $_POST['gender'] ?? '';
 
     // --- Validation ---
@@ -89,9 +248,7 @@ function handleRegister(UserModel $userModel)
     if (empty($fullname)) $errors[] = 'Full name is required.';
     if (empty($dob_string)) $errors[] = 'Date of birth is required.';
     if (empty($gender)) $errors[] = 'Gender is required.';
-    // Thêm các validation khác nếu cần (độ dài pass, username tồn tại, email tồn tại...)
 
-    // Kiểm tra username hoặc email đã tồn tại chưa
     if (empty($errors)) {
         if ($userModel->findUserByUsername($username)) {
             $errors[] = 'Username already exists.';
@@ -101,7 +258,6 @@ function handleRegister(UserModel $userModel)
         }
     }
 
-    // Nếu có lỗi validation -> Quay lại trang đăng ký với thông báo
     if (!empty($errors)) {
         $error_param = urlencode($errors[0]);
         header("Location: ../views/RegisterPage.php?error=$error_param");
@@ -114,15 +270,14 @@ function handleRegister(UserModel $userModel)
 
     $gender_int = null;
     if ($gender === 'male') {
-        $gender_int = 0; // Giả sử 0 là nam
+        $gender_int = 0;
     } elseif ($gender === 'female') {
-        $gender_int = 1; // Giả sử 1 là nữ
+        $gender_int = 1;
     } elseif ($gender === 'other') {
-        $gender_int = 2; // Giả sử 2 là khác
+        $gender_int = 2;
     }
 
     try {
-        // Chỉ tạo DateTime nếu $dob_string không rỗng
         $dob_datetime = !empty($dob_string) ? new DateTime($dob_string) : null;
     } catch (Exception $e) {
         header("Location: ../views/RegisterPage.php?error=invalid_dob_format");
@@ -181,6 +336,6 @@ function handleLogout()
     }
     session_destroy();
 
-    header('Location: ../index.php?status=logged_out');
+    header('Location: ../index.php?status=logged-out');
     exit;
 }
