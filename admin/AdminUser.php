@@ -151,12 +151,13 @@ $users = $userModel->getAllUsers();
                 </table>
             </div>
         </main>
+
+        <!-- Footer -->
+        <div>
+            <?php include('../admin/includes/AdminFooter.php'); ?>
+        </div>
     </div>
 
-    <!-- Footer -->
-    <div>
-        <?php include('../admin/includes/AdminFooter.php'); ?>
-    </div>
 
     <!-- Modal Edit User Profile -->
     <div class="modal fade" id="editUserModal" tabindex="-1" aria-labelledby="editUserModalLabel" aria-hidden="true">

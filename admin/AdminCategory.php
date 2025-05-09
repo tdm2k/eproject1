@@ -150,11 +150,11 @@ sort($categories);
                 </table>
             </div>
         </main>
-    </div>
 
-    <!-- Footer -->
-    <div>
-        <?php include('../admin/includes/AdminFooter.php'); ?>
+        <!-- Footer -->
+        <div>
+            <?php include('../admin/includes/AdminFooter.php'); ?>
+        </div>
     </div>
 
     <!-- Modal Add Category -->
