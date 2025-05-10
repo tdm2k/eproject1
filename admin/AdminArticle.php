@@ -34,7 +34,6 @@ if (session_status() === PHP_SESSION_NONE) {
             <p>Nội dung chính</p>
         </main>
 
-
         <!-- Footer -->
         <div>
             <?php include('../admin/includes/AdminFooter.php'); ?>

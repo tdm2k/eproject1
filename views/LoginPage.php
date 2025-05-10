@@ -13,6 +13,7 @@ if (session_status() === PHP_SESSION_NONE) {
 
     <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="../assets/css/simple-notification.css">
 
     <style>
         body {
@@ -53,23 +54,6 @@ if (session_status() === PHP_SESSION_NONE) {
             border-color: #80bdff;
         }
 
-        .success-notification {
-            position: fixed;
-            top: auto;
-            bottom: 20px;
-            left: auto;
-            right: 20px;
-            z-index: 1055;
-            opacity: 0;
-            transform: translateX(30px);
-            transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
-        }
-
-        .success-notification.show {
-            opacity: 1;
-            transform: translateX(0);
-        }
-
         /* --- Responsive đơn giản --- */
         @media (max-width: 767.98px) {
             .login-form-wrapper {
@@ -85,7 +69,6 @@ if (session_status() === PHP_SESSION_NONE) {
         @media (max-width: 575.98px) {
             .login-form-wrapper {
                 padding: 20px;
-                /* Giảm padding thêm */
             }
 
             .login-form-wrapper h2 {
@@ -112,11 +95,20 @@ if (session_status() === PHP_SESSION_NONE) {
                     <i class="bi bi-x-circle-fill me-2"></i> Invalid username or password!
                 </div>
             <?php endif; ?>
-            <?php if (isset($_GET['success']) && $_GET['success'] === 'registered'): ?>
+
+            <?php
+            $successMessages = [
+                'registered' => 'User registered successfully! Please login.',
+                'password_reset' => 'Password reset successfully! Please login.'
+            ];
+
+            if (isset($_GET['success']) && isset($successMessages[$_GET['success']])): ?>
                 <div class="alert alert-success success-notification show" role="alert">
-                    <i class="bi bi-check-circle-fill me-2"></i> User registered successfully! Please login.
+                    <i class="bi bi-check-circle-fill me-2"></i>
+                    <?= $successMessages[$_GET['success']] ?>
                 </div>
             <?php endif; ?>
+
             <form action="../../controllers/UserController.php?action=login" method="post">
                 <div class="mb-3">
                     <label for="username" class="form-label">Username or Email</label>
@@ -129,6 +121,7 @@ if (session_status() === PHP_SESSION_NONE) {
                 <button type="submit" class="btn btn-primary w-100">Login</button>
                 <div class="mt-3 text-center">
                     <p>Don't have an account? <a href="RegisterPage.php">Register now!</a></p>
+                    <p>Forgot your password? <a href="ResetPasswordPage.php">Recover here</a></p>
                 </div>
             </form>
         </div>
@@ -136,19 +129,7 @@ if (session_status() === PHP_SESSION_NONE) {
 
     <script src="../vendor/jquery/jquery.min.js"></script>
     <script src="../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const successNotification = document.querySelector('.success-notification');
-            if (successNotification) {
-                setTimeout(function() {
-                    successNotification.classList.add('show');
-                    setTimeout(function() {
-                        successNotification.classList.remove('show');
-                    }, 3000); // 3 giây
-                }, 100);
-            }
-        });
-    </script>
+    <script src="../assets/js/simple-notification.js"></script>
 </body>
 
 </html>

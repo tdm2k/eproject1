@@ -3,9 +3,11 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 require_once '../models/UserModel.php';
+require_once '../models/PasswordResetModel.php';
 require_once '../entities/User.php';
 
 $userModel = new UserModel();
+$resetPasswordModel = new PasswordResetModel();
 
 $action = $_GET['action'] ?? null;
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -22,8 +24,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         case 'delete':
             handleDelete($userModel);
             break;
-        case 'change-password':
+        case 'change_password':
             handleChangePassword($userModel);
+            break;
+        case 'request_password':
+            handleRequestPassword($resetPasswordModel, $userModel);
+            break;
+        case 'reset_password':
+            handleResetPassword($resetPasswordModel, $userModel);
+            break;
         default:
             header('Location: ../views/LoginPage.php');
             exit;
@@ -42,7 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-// --- Hàm xử lý Update ---
+// --- Update ---
 function handleUpdate(UserModel $userModel)
 {
     $userId = $_POST['id'];
@@ -77,7 +86,6 @@ function handleUpdate(UserModel $userModel)
                 $dob = new DateTime($dobString);
             } catch (Exception $e) {
                 $errors[] = 'Invalid date of birth format.';
-                exit;
             }
         }
 
@@ -107,19 +115,19 @@ function handleUpdate(UserModel $userModel)
         $success = $userModel->updateUser($updatedUser);
 
         if ($success) {
-            header('Location: ../admin/AdminUser.php?action=userList&status=user-updated');
+            header('Location: ../admin/AdminUser.php?action=userList&status=user_updated');
             exit;
         } else {
-            header('Location: ../admin/AdminUser.php?action=userList&error=user-not-updated');
+            header('Location: ../admin/AdminUser.php?action=userList&error=user_not_updated');
             exit;
         }
     } else {
-        header('Location: ../admin/AdminUser.php?action=userList&error=invalid-user-id');
+        header('Location: ../admin/AdminUser.php?action=userList&error=invalid_user_id');
         exit;
     }
 }
 
-// --- Hàm xử lý Delete ---
+// --- Delete ---
 function handleDelete(UserModel $userModel)
 {
     $userId = $_GET['id'] ?? $_POST['id'] ?? null;
@@ -128,19 +136,19 @@ function handleDelete(UserModel $userModel)
         $success = $userModel->deleteUser($userId);
 
         if ($success) {
-            header('Location: ../admin/AdminUser.php?action=userList&status=user-deleted');
+            header('Location: ../admin/AdminUser.php?action=userList&status=user_deleted');
             exit;
         } else {
-            header('Location: ../admin/AdminUser.php?action=userList&error=user-not-deleted');
+            header('Location: ../admin/AdminUser.php?action=userList&error=user_not_deleted');
             exit;
         }
     } else {
-        header('Location: ../admin/AdminUser.php?action=userList&error=invalid-user-id');
+        header('Location: ../admin/AdminUser.php?action=userList&error=invalid_user_id');
         exit;
     }
 }
 
-// --- Hàm xử lý thay đổi mật khẩu ---
+// --- Change Password ---
 function handleChangePassword(UserModel $userModel)
 {
     $userId = $_POST['id'];
@@ -151,30 +159,24 @@ function handleChangePassword(UserModel $userModel)
     $errors = [];
     if (!$userId) {
         $errors[] = 'User ID is required.';
-        exit;
     }
 
     if (empty($oldPassword) || empty($newPassword) || empty($confirmPassword)) {
         $errors[] = 'All fields are required.';
-        exit;
     }
 
     if ($newPassword !== $confirmPassword) {
         $errors[] = 'Passwords do not match.';
-        exit;
     }
-
 
     $user = $userModel->findUserById($userId);
 
     if (!$user) {
         $errors[] = 'User not found.';
-        exit;
     }
 
     if (!password_verify($oldPassword, $user->getPasswordHash())) {
         $errors[] = 'Old password is incorrect.';
-        exit;
     }
 
     if (!empty($errors)) {
@@ -187,15 +189,15 @@ function handleChangePassword(UserModel $userModel)
     $success = $userModel->changePassword($userId, $newPasswordHash);
 
     if ($success) {
-        header('Location: ../admin/AdminUser.php?action=userList&status=password-updated');
+        header('Location: ../admin/AdminUser.php?action=userList&status=password_updated');
         exit;
     } else {
-        header('Location: ../admin/AdminUser.php?action=userList&error=password-not-updated');
+        header('Location: ../admin/AdminUser.php?action=userList&error=password_not_updated');
         exit;
     }
 }
 
-// --- Hàm xử lý Login ---
+// --- Login ---
 function handleLogin(UserModel $userModel)
 {
     $identifier = trim($_POST['username'] ?? '');
@@ -227,7 +229,7 @@ function handleLogin(UserModel $userModel)
     }
 }
 
-// --- Hàm xử lý Register ---
+// --- Register ---
 function handleRegister(UserModel $userModel)
 {
     $username = trim($_POST['username'] ?? '');
@@ -317,7 +319,7 @@ function handleRegister(UserModel $userModel)
     }
 }
 
-// --- Hàm xử lý Logout ---
+// --- Logout ---
 function handleLogout()
 {
     $_SESSION = array();
@@ -336,6 +338,102 @@ function handleLogout()
     }
     session_destroy();
 
-    header('Location: ../index.php?status=logged-out');
+    header('Location: ../index.php?status=logged_out');
+    exit;
+}
+
+// --- Reset Password ---
+function handleResetPassword(PasswordResetModel $resetPasswordModel, UserModel $userModel)
+{
+    $token = $_POST['token'] ?? '';
+    $newPassword = $_POST['new_password'] ?? '';
+    $confirmPassword = $_POST['confirm_password'] ?? '';
+
+    if (empty($token) || empty($newPassword) || empty($confirmPassword)) {
+        header('Location: ../views/ResetPasswordPage.php?token=' . $token . '&error=empty_fields');
+        exit;
+    }
+
+    if ($newPassword !== $confirmPassword) {
+        header('Location: ../views/ResetPasswordPage.php?token=' . $token . '&error=passwords_do_not_match');
+        exit;
+    }
+
+    $resetRequest = $resetPasswordModel->findPasswordResetByToken($token);
+
+    if (!$resetRequest || strtotime($resetRequest['expired_at']) < time()) {
+        var_dump($token);
+        var_dump(strtotime($resetRequest['expired_at']));
+        var_dump(time());
+        exit;
+        header('Location: ../views/ResetPasswordPage.php?token=' . $token . '&error=invalid_or_expired_token');
+        exit;
+    }
+
+    $user = $userModel->findUserByEmail($resetRequest['email']);
+    if (!$user) {
+        header('Location: ../views/ResetPasswordPage.php?token=' . $token . '&error=user_not_found');
+        exit;
+    }
+
+    $newPasswordHash = password_hash($newPassword, PASSWORD_DEFAULT);
+    $success = $userModel->changePassword($user->getId(), $newPasswordHash);
+
+    if ($success) {
+        $resetPasswordModel->deletePasswordResetToken($resetRequest['email']);
+        header('Location: ../views/LoginPage.php?success=password_reset');
+        exit;
+    } else {
+        header('Location: ../views/ResetPasswordPage.php?token=' . $token . '&error=password_reset_failed');
+        exit;
+    }
+}
+
+// --- Request Reset Password ---
+function handleRequestPassword(PasswordResetModel $resetPasswordModel, UserModel $userModel)
+{
+    date_default_timezone_set('Asia/Ho_Chi_Minh');
+    $resetPasswordModel->deleteExpiredTokens();
+
+    $email = trim($_POST['email'] ?? '');
+
+    if (empty($email)) {
+        header('Location: ../views/ResetPasswordPage.php?error=empty_email');
+        exit;
+    }
+
+    $user = $userModel->findUserByEmail($email);
+
+    if (!$user) {
+        header('Location: ../views/ResetPasswordPage.php?error=email_not_found');
+        exit;
+    }
+
+    // Xoá token cũ (nếu có)
+    $resetPasswordModel->deletePasswordResetToken($email);
+
+    // Tạo token mới
+    $token = bin2hex(random_bytes(32)); // 64 ký tự
+    $expires = date("Y-m-d H:i:s", strtotime("+15 minutes"));
+
+    $success = $resetPasswordModel->createPasswordResetToken($email, $token, $expires);
+    if (!$success) {
+        header('Location: ../views/ResetPasswordPage.php?error=token_creation_failed');
+        exit;
+    }
+
+    $resetLink = "localhost:3000/views/ResetPasswordPage.php?token=" . urlencode($token);
+    $subject = "Password Reset Request";
+    $message = "You requested to reset your password. Click the link below:\n\n$resetLink\n\n"
+        . "If you did not request this, please ignore this email.";
+    $headers = "From: no-reply@space.com\r\n";
+
+    // Lưu thông tin "email" vào file txt
+    $file = '../reset_password_emails.txt';
+    $timestamp = date("Y-m-d H:i:s");
+    $emailContent = "[{$timestamp}] To: {$email}\nSubject: {$subject}\n\n{$message}\n{$headers}\n\n--------------------\n";
+    file_put_contents($file, $emailContent, FILE_APPEND | LOCK_EX);
+
+    header('Location: ../index.php?success=password_reset_link_sent');
     exit;
 }

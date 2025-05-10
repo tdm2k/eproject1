@@ -22,44 +22,11 @@ $users = $userModel->getAllUsers();
     <!-- Bootstrap -->
     <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="../assets/css/simple-notification.css">
 
     <style>
         .main-page-content {
             margin-left: 280px;
-        }
-
-        .success-notification {
-            position: fixed;
-            top: auto;
-            bottom: 20px;
-            left: auto;
-            right: 20px;
-            z-index: 1055;
-            opacity: 0;
-            transform: translateX(30px);
-            transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
-        }
-
-        .success-notification.show {
-            opacity: 1;
-            transform: translateX(0);
-        }
-
-        .error-notification {
-            position: fixed;
-            top: auto;
-            bottom: 20px;
-            left: auto;
-            right: 20px;
-            z-index: 1055;
-            opacity: 0;
-            transform: translateX(30px);
-            transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
-        }
-
-        .error-notification.show {
-            opacity: 1;
-            transform: translateX(0);
         }
 
         .action-column {
@@ -80,15 +47,15 @@ $users = $userModel->getAllUsers();
                 <h2 class="mb-4">Users</h2>
 
                 <?php if (isset($_GET['status'])): ?>
-                    <?php if ($_GET['status'] === 'password-updated'): ?>
+                    <?php if ($_GET['status'] === 'password_updated'): ?>
                         <div class="alert alert-success success-notification show" role="alert">
                             <i class="bi bi-check-circle-fill me-2"></i> Password changed successfully!
                         </div>
-                    <?php elseif ($_GET['status'] === 'user-updated'): ?>
+                    <?php elseif ($_GET['status'] === 'user_updated'): ?>
                         <div class="alert alert-success success-notification show" role="alert">
                             <i class="bi bi-check-circle-fill me-2"></i> User profile updated successfully!
                         </div>
-                    <?php elseif ($_GET['status'] === 'user-deleted'): ?>
+                    <?php elseif ($_GET['status'] === 'user_deleted'): ?>
                         <div class="alert alert-success success-notification show" role="alert">
                             <i class="bi bi-check-circle-fill me-2"></i> User deleted successfully!
                         </div>
@@ -134,16 +101,22 @@ $users = $userModel->getAllUsers();
                                         data-user-gender="<?= $user->getGender() ?>">
                                         <i class="bi bi-pencil-fill me-2"></i> Edit Profile
                                     </a>
-                                    <a href="#" class="btn btn-sm btn-warning change-password-btn"
-                                        data-bs-toggle="modal"
-                                        data-bs-target="#changePasswordModal"
-                                        data-user-id="<?= $user->getId() ?>">
-                                        <i class="bi bi-key-fill me-2"></i> Change Password
-                                    </a>
-                                    <a href="../controllers/UserController.php?action=delete&id=<?= $user->getId() ?>" class="btn btn-sm btn-danger" onclick="return confirm('Do you really want to delete this user?');">
-                                        <i class="bi bi-trash-fill me-2"></i> Delete
-                                    </a>
-
+                                    <?php if ($user->getRole() !== 'admin'): ?>
+                                        <a href="../controllers/UserController.php?action=reset-password&id=<?= $user->getId() ?>" class="btn btn-sm btn-info">
+                                            <i class="bi bi-arrow-clockwise me-2"></i> Reset Password
+                                        </a>
+                                        <a href="../controllers/UserController.php?action=delete&id=<?= $user->getId() ?>" class="btn btn-sm btn-danger" onclick="return confirm('Do you really want to delete this user?');">
+                                            <i class="bi bi-trash-fill me-2"></i> Delete
+                                        </a>
+                                    <?php endif; ?>
+                                    <?php if ($user->getRole() === 'admin'): ?>
+                                        <a href="#" class="btn btn-sm btn-info change-password-btn"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#changePasswordModal"
+                                            data-user-id="<?= $user->getId() ?>">
+                                            <i class="bi bi-key-fill me-2"></i> Change Password
+                                        </a>
+                                    <?php endif; ?>
                                 </td>
                             </tr>
                         <?php endforeach ?>
@@ -248,6 +221,7 @@ $users = $userModel->getAllUsers();
     <!-- Bootstrap -->
     <script src="../vendor/jquery/jquery.min.js"></script>
     <script src="../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="../assets/js/simple-notification.js"></script>
     <script>
         $(document).ready(function() {
             $('.edit-user-btn').click(function() {
@@ -274,30 +248,6 @@ $users = $userModel->getAllUsers();
                 var userId = $(this).data('user-id');
                 $('#changePasswordFormId').val(userId);
             });
-        });
-
-        document.addEventListener('DOMContentLoaded', function() {
-            const successNotification = document.querySelector('.success-notification');
-            if (successNotification) {
-                setTimeout(function() {
-                    successNotification.classList.add('show');
-                    setTimeout(function() {
-                        successNotification.classList.remove('show');
-                    }, 3000); // 3 giây
-                }, 100);
-            }
-        });
-
-        document.addEventListener('DOMContentLoaded', function() {
-            const errorNotification = document.querySelector('.error-notification');
-            if (errorNotification) {
-                setTimeout(function() {
-                    errorNotification.classList.add('show');
-                    setTimeout(function() {
-                        errorNotification.classList.remove('show');
-                    }, 3000); // 3 giây
-                }, 100);
-            }
         });
     </script>
 </body>

@@ -94,6 +94,14 @@ CREATE TABLE books (
     buy_link VARCHAR(2083)
 );
 
+-- ========== 🔑 PASSWORD RESET ==========
+CREATE TABLE password_resets (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    email VARCHAR(255),
+    token VARCHAR(255) UNIQUE,
+    expired_at TIMESTAMP
+);
+
 -- Bảng trung gian cho quan hệ nhiều-nhiều giữa articles và categories
 CREATE TABLE article_categories (
     article_id INT,
