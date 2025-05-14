@@ -25,11 +25,21 @@ CREATE TABLE categories (
 CREATE TABLE planets (
     id INT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(255),
-    discovery_date DATE,
-    atmosphere TEXT,
-    distance_from_earth_km DOUBLE,
+    image VARCHAR(255),
     description TEXT,
-    category_id INT,
+    potential_for_life TEXT,
+    orbit_and_rotation TEXT,
+    rings BOOLEAN,
+    structure TEXT,
+    atmosphere TEXT,
+    name_sake TEXT,
+    size_and_distance TEXT,
+    moons TEXT,
+    formation TEXT,
+    surface TEXT,
+    magnetosphere TEXT,
+    category_id INT, 
+    is_deleted BOOLEAN DEFAULT FALSE,
     FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE SET NULL ON UPDATE CASCADE
 );
 

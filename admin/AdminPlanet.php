@@ -1,11 +1,18 @@
 <?php
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
-
-    if ($_SESSION['user_role'] !== 'admin') {
-        header('Location: ../index.php');
-    }
 }
+
+require_once '../controllers/PlanetController.php';
+$controller = new PlanetController();
+$response = $controller->index();
+$planets = $response['status'] === 'success' ? $response['data'] : [];
+$error_message = $response['status'] === 'error' ? $response['message'] : null;
+
+// Thông báo từ query string
+$status = $_GET['status'] ?? null;
+$message = $_GET['message'] ?? null;
+$error = $_GET['error'] ?? null;
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -17,10 +24,56 @@ if (session_status() === PHP_SESSION_NONE) {
     <!-- Bootstrap -->
     <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-
+    <!-- CSS -->
     <style>
         .main-page-content {
             margin-left: 280px;
+        }
+
+        .categories-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .action-column {
+            text-align: right;
+            white-space: nowrap;
+        }
+
+        .success-notification {
+            position: fixed;
+            top: auto;
+            bottom: 20px;
+            left: auto;
+            right: 20px;
+            z-index: 1055;
+            opacity: 0;
+            transform: translateX(30px);
+            transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+        }
+
+        .success-notification.show {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .error-notification {
+            position: fixed;
+            top: auto;
+            bottom: 20px;
+            left: auto;
+            right: 20px;
+            z-index: 1055;
+            opacity: 0;
+            transform: translateX(30px);
+            transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+        }
+
+        .error-notification.show {
+            opacity: 1;
+            transform: translateX(0);
         }
     </style>
 </head>
@@ -30,8 +83,104 @@ if (session_status() === PHP_SESSION_NONE) {
         <!-- Sidebar -->
         <?php include '../admin/includes/AdminSidebar.php'; ?>
 
+        <!-- Main Content -->
         <main class="flex-grow-1 p-4">
-            <p>Nội dung chính</p>
+
+            <div class="container py-5">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h1 class="display-4">Planet Management</h1>
+                    <div>
+                        <a href="PlanetForm.php" class="btn btn-primary">
+                            <i class="bi bi-plus-circle"></i> Add New Planet
+                        </a>
+                        <a href="PlanetTrash.php" class="btn btn-danger">
+                            <i class="bi bi-trash"></i> Trash
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Thông báo -->
+                <?php if ($message): ?>
+                    <div class="alert <?= strpos($status, 'failed') === false ? 'alert-success' : 'alert-danger' ?>" role="alert">
+                        <?= htmlspecialchars($message) ?>
+                    </div>
+                <?php endif; ?>
+
+                <?php if ($error): ?>
+                    <div class="alert alert-danger" role="alert">
+                        <?php
+                        echo match ($error) {
+                            'invalid-action' => 'Invalid action specified.',
+                            'invalid-request-method' => 'Invalid request method.',
+                            'empty-planet-name' => 'Planet name cannot be empty.',
+                            'invalid-planet-id' => 'Invalid planet ID.',
+                            default => 'An error occurred.',
+                        };
+                        ?>
+                    </div>
+                <?php endif; ?>
+
+                <?php if ($error_message): ?>
+                    <div class="alert alert-danger" role="alert">
+                        <?= htmlspecialchars($error_message) ?>
+                    </div>
+                <?php endif; ?>
+
+                <!-- Bảng dữ liệu -->
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Image</th>
+                                <th>Name</th>
+                                <th>Category</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php if (!empty($planets)): ?>
+                                <?php foreach ($planets as $planet): ?>
+                                    <tr>
+                                        <td><?php echo htmlspecialchars($planet->getId()); ?></td>
+                                        <td>
+                                            <?php if ($planet->getImage()): ?>
+                                                <img src="../<?php echo htmlspecialchars($planet->getImage()); ?>"
+                                                    alt="<?php echo htmlspecialchars($planet->getName()); ?>"
+                                                    class="rounded-circle object-fit-cover" style="width: 120px; height: 120px;">
+                                            <?php else: ?>
+                                                <img src="../assets/images/no-image.png"
+                                                    alt="No image"
+                                                    class="img-thumbnail"
+                                                    class="rounded-circle object-fit-cover" style="width: 100px; height: 100px;">
+                                            <?php endif; ?>
+                                        </td>
+                                        <td><?php echo htmlspecialchars($planet->getName()); ?></td>
+                                        <td><?php echo htmlspecialchars($planet->getCategoryName()); ?></td>
+                                        <td>
+                                            <div class="btn-group">
+                                                <a href="PlanetEdit.php?id=<?php echo $planet->getId(); ?>"
+                                                    class="btn btn-primary btn-sm me-2">
+                                                    <i class="fas fa-edit"></i> Edit
+                                                </a>
+                                                <a href="../controllers/PlanetController.php?action=delete&id=<?php echo $planet->getId(); ?>"
+                                                    class="btn btn-danger btn-sm"
+                                                    onclick="return confirm('Are you sure you want to delete this planet?')">
+                                                    <i class="fas fa-trash"></i> Delete
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            <?php else: ?>
+                                <tr>
+                                    <td colspan="8" class="text-center">No planets found.</td>
+                                </tr>
+                            <?php endif; ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </main>
 
         <!-- Footer -->
