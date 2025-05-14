@@ -104,13 +104,9 @@ if (session_status() === PHP_SESSION_NONE) {
 </head>
 
 <body>
-
     <?php include('../includes/Header.php'); ?>
 
     <div class="main-content-area">
-        <div class="image-section">
-        </div>
-
         <div class="form-section">
             <form class="registration-form" action="../../controllers/UserController.php?action=register" method="post">
                 <h2>Create Account</h2>
@@ -169,7 +165,6 @@ if (session_status() === PHP_SESSION_NONE) {
                         </div>
                     </div>
                 </div>
-
                 <?php
                 if (isset($_GET['error'])):
                     $error = $_GET['error'];
@@ -185,6 +180,9 @@ if (session_status() === PHP_SESSION_NONE) {
                     <p>Already have an account? <a href="LoginPage.php">Login here</a></p>
                 </div>
             </form>
+        </div>
+
+        <div class="image-section">
         </div>
     </div>
 

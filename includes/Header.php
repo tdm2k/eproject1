@@ -1,6 +1,6 @@
 <?php
 $currentPageName = strtolower(basename($_SERVER['SCRIPT_NAME'], '.php'));
-$hideSearchOnPages = ['loginpage', 'registerpage']; // dùng chữ thường
+$hideSearchOnPages = ['loginpage', 'registerpage', 'changepasswordpage', 'resetpasswordpage', 'userpage']; // dùng chữ thường
 $showSearchBar = !in_array($currentPageName, $hideSearchOnPages);
 ?>
 <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-secondary fixed-top">

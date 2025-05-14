@@ -14,42 +14,7 @@ if (session_status() === PHP_SESSION_NONE) {
     <!-- Bootstrap -->
     <link href="/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-
-    <style>
-        .success-notification {
-            position: fixed;
-            top: auto;
-            bottom: 20px;
-            left: auto;
-            right: 20px;
-            z-index: 1055;
-            opacity: 0;
-            transform: translateX(30px);
-            transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
-        }
-
-        .success-notification.show {
-            opacity: 1;
-            transform: translateX(0);
-        }
-
-        .error-notification {
-            position: fixed;
-            top: auto;
-            bottom: 20px;
-            left: auto;
-            right: 20px;
-            z-index: 1055;
-            opacity: 0;
-            transform: translateX(30px);
-            transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
-        }
-
-        .error-notification.show {
-            opacity: 1;
-            transform: translateX(0);
-        }
-    </style>
+    <link rel="stylesheet" href="assets/css/simple-notification.css">
 </head>
 
 <body>
@@ -62,9 +27,15 @@ if (session_status() === PHP_SESSION_NONE) {
     <div class="container" style="margin-top: 6%">
 
         <!-- Success Notification -->
-        <?php if (isset($_GET['status']) && $_GET['status'] === 'logged-out'): ?>
+        <?php if (isset($_GET['status']) && $_GET['status'] === 'logged_out'): ?>
             <div class="alert alert-success success-notification show" role="alert">
                 <i class="bi bi-check-circle-fill me-2"></i> Logged out successfully!
+            </div>
+        <?php endif; ?>
+
+        <?php if (isset($_GET['success']) && $_GET['success'] === 'password_reset_link_sent'): ?>
+            <div class="alert alert-success success-notification show" role="alert">
+                <i class="bi bi-check-circle-fill me-2"></i> Password reset request sent successfully! Please check your email.
             </div>
         <?php endif; ?>
 
@@ -78,9 +49,11 @@ if (session_status() === PHP_SESSION_NONE) {
         <?php endif; ?>
 
         <p>Welcome</p>
+        <?php include('moon-animation.html'); ?>
 
         <!-- Catalogue -->
-        <?php include('includes/Catalogue.html'); ?>
+        <?php //include('includes/Catalogue.html'); 
+        ?>
     </div>
 
     <!-- Footer -->
@@ -91,31 +64,8 @@ if (session_status() === PHP_SESSION_NONE) {
     <!-- Bootstrap -->
     <script src="vendor/jquery/jquery.min.js"></script>
     <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const successNotification = document.querySelector('.success-notification');
-            if (successNotification) {
-                setTimeout(function() {
-                    successNotification.classList.add('show');
-                    setTimeout(function() {
-                        successNotification.classList.remove('show');
-                    }, 3000); // 3 giây
-                }, 100);
-            }
-        });
 
-        document.addEventListener('DOMContentLoaded', function() {
-            const errorNotification = document.querySelector('.error-notification');
-            if (errorNotification) {
-                setTimeout(function() {
-                    errorNotification.classList.add('show');
-                    setTimeout(function() {
-                        errorNotification.classList.remove('show');
-                    }, 3000); // 3 giây
-                }, 100);
-            }
-        });
-    </script>
+    <script src="assets/js/simple-notification.js"></script>
 </body>
 
 </html>

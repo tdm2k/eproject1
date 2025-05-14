@@ -33,12 +33,13 @@ if (session_status() === PHP_SESSION_NONE) {
         <main class="flex-grow-1 p-4">
             <p>Nội dung chính</p>
         </main>
+
+        <!-- Footer -->
+        <div>
+            <?php include('../admin/includes/AdminFooter.php'); ?>
+        </div>
     </div>
 
-    <!-- Footer -->
-    <div>
-        <?php include('../admin/includes/AdminFooter.php'); ?>
-    </div>
 
     <!-- Bootstrap -->
     <script src="../vendor/jquery/jquery.min.js"></script>
