@@ -135,8 +135,8 @@ $message = $_GET['message'] ?? null;
                 <div class="container">
                     <div class="row">
                         <div class="col-lg-7">
-                            <h2 class="display-5 fw-bold"><?php echo html_entity_decode(htmlspecialchars($planet->getName())); ?> Facts</h2>
-                            <p><?= html_entity_decode(htmlspecialchars($planet->getDescription())) ?></p>
+                            <h2 class="display-5 fw-bold"><?php echo nl2br(html_entity_decode($planet->getName())); ?> Facts</h2>
+                            <p><?= nl2br(html_entity_decode($planet->getDescription())) ?></p>
                         </div>
                         <div class="col-lg-5">
                             <div class="row" style="font-size: 16px;">
@@ -223,24 +223,24 @@ $message = $_GET['message'] ?? null;
                         <div class="container">
                             <div id="introducation" class="mb-5">
                                 <h1>Introducation</h1>
-                                <p><?= html_entity_decode(htmlspecialchars($planet->getDescription())) ?></p>
+                                <p><?= nl2br(html_entity_decode($planet->getDescription())) ?></p>
                             </div>
 
                             <div id="name-sake" class="mb-5">
                                 <h1>Namesake</h1>
-                                <p><?= html_entity_decode(htmlspecialchars($planet->getNameSake())) ?></p>
+                                <p><?= nl2br(html_entity_decode($planet->getNameSake())) ?></p>
                             </div>
 
                             <div id="size-distance" class="mb-5">
                                 <h1>Size & Distance</h1>
-                                <p><?= html_entity_decode(htmlspecialchars($planet->getSizeAndDistance())) ?></p>
+                                <p><?= nl2br(html_entity_decode($planet->getSizeAndDistance())) ?></p>
                             </div>
 
                             <div id="rings" class="mb-5">
                                 <h1>Rings</h1>
                                 <p>
                                     <?php
-                                    $planetName = html_entity_decode(htmlspecialchars($planet->getName() ?? 'This planet'));
+                                    $planetName = nl2br(html_entity_decode($planet->getName() ?? 'This planet'));
                                     echo $planet->getRings() ? "$planetName has rings." : "$planetName has no rings.";
                                     ?>
                                 </p>
@@ -248,42 +248,42 @@ $message = $_GET['message'] ?? null;
 
                             <div id="moons" class="mb-5">
                                 <h1>Moons</h1>
-                                <p><?= html_entity_decode(htmlspecialchars($planet->getMoons() ?? 'N/A')) ?></p>
+                                <p><?= nl2br(html_entity_decode($planet->getMoons() ?? 'N/A')) ?></p>
                             </div>
 
                             <div id="structure" class="mb-5">
                                 <h1>Structure</h1>
-                                <p><?= html_entity_decode(htmlspecialchars($planet->getStructure() ?? 'N/A')) ?></p>
+                                <p><?= nl2br(html_entity_decode($planet->getStructure() ?? 'N/A')) ?></p>
                             </div>
 
                             <div id="surface" class="mb-5">
                                 <h1>Surface</h1>
-                                <p><?= html_entity_decode(htmlspecialchars($planet->getSurface() ?? 'N/A')) ?></p>
+                                <p><?= nl2br(html_entity_decode($planet->getSurface() ?? 'N/A')) ?></p>
                             </div>
 
                             <div id="atmosphere" class="mb-5">
                                 <h1>Atmosphere</h1>
-                                <p><?= html_entity_decode(htmlspecialchars($planet->getAtmosphere() ?? 'N/A')) ?></p>
+                                <p><?= nl2br(html_entity_decode($planet->getAtmosphere() ?? 'N/A')) ?></p>
                             </div>
 
                             <div id="magnetosphere" class="mb-5">
                                 <h1>Magnetosphere</h1>
-                                <p><?= html_entity_decode(htmlspecialchars($planet->getMagnetosphere() ?? 'N/A')) ?></p>
+                                <p><?= nl2br(html_entity_decode($planet->getMagnetosphere() ?? 'N/A')) ?></p>
                             </div>
 
                             <div id="orbit-rotation" class="mb-5">
                                 <h1>Orbit & Rotation</h1>
-                                <p><?= html_entity_decode(htmlspecialchars($planet->getOrbitAndRotation() ?? 'N/A')) ?></p>
+                                <p><?= nl2br(html_entity_decode($planet->getOrbitAndRotation() ?? 'N/A')) ?></p>
                             </div>
 
                             <div id="formation" class="mb-5">
                                 <h1>Formation</h1>
-                                <p><?= html_entity_decode(htmlspecialchars($planet->getFormation() ?? 'N/A')) ?></p>
+                                <p><?= nl2br(html_entity_decode($planet->getFormation() ?? 'N/A')) ?></p>
                             </div>
 
                             <div id="potential-life" class="mb-5">
                                 <h1>Potential for Life</h1>
-                                <p><?= html_entity_decode(htmlspecialchars($planet->getPotentialForLife() ?? 'N/A')) ?></p>
+                                <p><?= nl2br(html_entity_decode($planet->getPotentialForLife() ?? 'N/A')) ?></p>
                             </div>
                         </div>
                     </div>
