@@ -120,7 +120,7 @@ $message = $_GET['message'] ?? null;
         <div class="container">
             <div class="row">
                 <div class="col-lg-8">
-                    <h1 class="display-4 fw-bold mb-4"><?php echo htmlspecialchars($book ? $book->getTitle() : 'Book Details'); ?></h1>
+                    <h1 class="display-4 fw-bold mb-4"><?php echo html_entity_decode(htmlspecialchars($book ? $book->getTitle() : 'Book Details')); ?></h1>
                     <p class="fs-5">Discover more about this fascinating book</p>
                 </div>
             </div>
@@ -146,7 +146,7 @@ $message = $_GET['message'] ?? null;
                         <div class="col-lg-4 text-center mb-4">
                             <?php if ($book->getImageUrl()): ?>
                                 <img src="../<?php echo htmlspecialchars($book->getImageUrl()); ?>"
-                                    alt="<?php echo htmlspecialchars($book->getTitle()); ?>"
+                                    alt="<?php echo html_entity_decode(htmlspecialchars($book->getTitle())); ?>"
                                     class="book-cover img-fluid rounded">
                             <?php else: ?>
                                 <img src="../assets/images/no-image.png" alt="No image" class="book-cover img-fluid rounded">

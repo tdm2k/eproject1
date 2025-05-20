@@ -112,7 +112,7 @@ $message = $_GET['message'] ?? null;
                                                             <p class="text-muted">No image</p>
                                                         <?php endif; ?>
                                                     </td>
-                                                    <td><?php echo htmlspecialchars($book->getTitle()); ?></td>
+                                                    <td><?php echo html_entity_decode(htmlspecialchars($book->getTitle())); ?></td>
                                                     <td><?php echo htmlspecialchars($book->getAuthor()); ?></td>
                                                     <td><?php echo htmlspecialchars($book->getPublisher()); ?></td>
                                                     <td><?php echo htmlspecialchars($book->getPublishYear()); ?></td>
