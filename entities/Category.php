@@ -4,20 +4,21 @@ declare(strict_types=1);
 
 class Category
 {
-    private ?int $id = null;
-    private ?string $name = null;
+    private $id;
+    private $name;
 
-    public function __construct(?string $name = null)
+    public function __construct($id, $name)
     {
+        $this->id = $id;
         $this->name = $name;
     }
 
     // --- Getters ---
-    public function getId(): ?int
+    public function getId(): mixed
     {
         return $this->id;
     }
-    public function getName(): ?string
+    public function getName()
     {
         return $this->name;
     }
@@ -31,8 +32,7 @@ class Category
     // Phương thức load từ mảng
     public static function fromArray(array $data): self
     {
-        $category = new self($data['name'] ?? null);
-        $category->id = $data['id'] ?? null;
+        $category = new self($data['id'] ?? null, $data['name'] ?? null);
         return $category;
     }
 }
