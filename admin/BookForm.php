@@ -4,11 +4,9 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 
 require_once '../controllers/BookController.php';
-require_once '../controllers/CategoryController.php';
 
 // Initialize controllers
 $bookController = new BookController();
-// $categoryController = new CategoryController();
 
 // Initialize variables
 $book = null;
@@ -18,12 +16,11 @@ $success = null;
 
 // Fetch categories
 try {
-    $categoryResponse = $categoryController->index();
-    if ($categoryResponse['status'] === 'success') {
-        $categories = $categoryResponse['data'];
-    }
+    $categoryModel = new CategoryModel();
+    $categories = $categoryModel->getAllCategories();
 } catch (Exception $e) {
-    $error = "Error loading categories: " . $e->getMessage();
+    $categories = [];
+    $error = "Failed to load categories: " . $e->getMessage();
 }
 
 // Fetch book data if editing

@@ -4,7 +4,7 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 
 require_once '../controllers/BookController.php';
-require_once '../controllers/CategoryController.php';
+// require_once '../controllers/CategoryController.php';
 
 // Initialize controllers
 $bookController = new BookController();
