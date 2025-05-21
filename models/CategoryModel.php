@@ -1,6 +1,5 @@
 <?php
-require_once __DIR__ . '/../connection.php';
-require_once __DIR__ . '/../entities/Category.php';
+require_once '../connection.php';
 
 class CategoryModel
 {
@@ -8,33 +7,46 @@ class CategoryModel
 
     public function __construct()
     {
-        $database = new Connection();
-        $this->conn = $database->getConnection();
+        $this->conn = new Connection();
     }
 
     // Get all categories
     public function getAllCategories()
     {
-        $query = "SELECT * FROM categories ORDER BY name";
-        $stmt = $this->conn->prepare($query);
+        $sql = "SELECT * FROM categories";
+
+        $stmt = $this->conn->getConnection()->prepare($sql);
         $stmt->execute();
+
         $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        
         $categories = [];
         foreach ($data as $categoryData) {
-            $categories[] = new Category(
-                $categoryData['id'],
-                $categoryData['name']
-            );
+            $categories[] = Category::fromArray($categoryData);
         }
+
         return $categories;
+    }
+
+    // Get category by ID
+    public function getCategoryById($id)
+    {
+        $sql = "SELECT * FROM categories WHERE id = :id";
+        $stmt = $this->conn->getConnection()->prepare($sql);
+        $stmt->bindParam(':id', $id);
+        $stmt->execute();
+
+        $data = $stmt->fetch(PDO::FETCH_ASSOC);
+        if ($data) {
+            return Category::fromArray($data);
+        }
+        return null;
     }
 
     // Add category
     public function addCategory($name): bool
     {
         $sql = "INSERT INTO categories (name) VALUES (:name)";
-        $stmt = $this->conn->prepare($sql);
+        $stmt = $this->conn->getConnection()->prepare($sql);
         $stmt->bindParam(':name', $name);
 
         return $stmt->execute();
@@ -44,7 +56,7 @@ class CategoryModel
     public function updateCategory($id, $name): bool
     {
         $sql = "UPDATE categories SET name = :name WHERE id = :id";
-        $stmt = $this->conn->prepare($sql);
+        $stmt = $this->conn->getConnection()->prepare($sql);
         $stmt->bindParam(':id', $id);
         $stmt->bindParam(':name', $name);
 
@@ -55,7 +67,7 @@ class CategoryModel
     public function deleteCategory($id): bool
     {
         $sql = "DELETE FROM categories WHERE id = :id";
-        $stmt = $this->conn->prepare($sql);
+        $stmt = $this->conn->getConnection()->prepare($sql);
         $stmt->bindParam(':id', $id);
 
         return $stmt->execute();

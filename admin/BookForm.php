@@ -3,33 +3,45 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-
 require_once '../controllers/BookController.php';
 require_once '../controllers/CategoryController.php';
 
+// Initialize controllers
 $bookController = new BookController();
 $categoryController = new CategoryController();
 
+// Initialize variables
 $book = null;
 $categories = [];
 $error = null;
 $success = null;
 
-// Get categories
-$categoryResponse = $categoryController->index();
-if ($categoryResponse['status'] === 'success') {
-    $categories = $categoryResponse['data'];
+// Fetch categories
+try {
+    $categoryResponse = $categoryController->index();
+    if ($categoryResponse['status'] === 'success') {
+        $categories = $categoryResponse['data'];
+    }
+} catch (Exception $e) {
+    $error = "Error loading categories: " . $e->getMessage();
 }
 
-// If editing, get book data
+// Fetch book data if editing
 if (isset($_GET['id'])) {
-    $response = $bookController->show($_GET['id']);
-    if ($response['status'] === 'success') {
-        $book = $response['data'];
-    } else {
-        $error = $response['message'];
+    try {
+        $response = $bookController->show($_GET['id']);
+        if ($response['status'] === 'success') {
+            $book = $response['data'];
+        } else {
+            $error = $response['message'];
+        }
+    } catch (Exception $e) {
+        $error = "Error loading book: " . $e->getMessage();
     }
 }
+
+// Page title
+$pageTitle = $book ? 'Edit Book' : 'Add New Book';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -37,7 +49,7 @@ if (isset($_GET['id'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Space Dot Com | Admin - <?php echo $book ? 'Edit' : 'Add'; ?> Book</title>
+    <title>Space Dot Com | Admin - <?php echo $pageTitle; ?></title>
     <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <style>
@@ -57,7 +69,7 @@ if (isset($_GET['id'])) {
             <div class="row">
                 <div class="col-md-12">
                     <div class="d-flex justify-content-between align-items-center mb-4">
-                        <h2><?php echo $book ? 'Edit Book' : 'Add New Book'; ?></h2>
+                        <h2><?php echo $pageTitle; ?></h2>
                         <a href="AdminBook.php" class="btn btn-secondary">
                             <i class="bi bi-arrow-left"></i> Back to Books
                         </a>
@@ -86,7 +98,7 @@ if (isset($_GET['id'])) {
                                 <div class="mb-3">
                                     <label for="title" class="form-label">Title *</label>
                                     <input type="text" class="form-control" id="title" name="title" required
-                                        value="<?php echo $book ? html_entity_decode(htmlspecialchars($book->getTitle())) : ''; ?>">
+                                        value="<?php echo $book ? htmlspecialchars($book->getTitle()) : ''; ?>">
                                 </div>
 
                                 <div class="mb-3">
@@ -123,11 +135,7 @@ if (isset($_GET['id'])) {
                                     <select class="form-select" id="categories" name="categories[]" multiple>
                                         <?php foreach ($categories as $category): ?>
                                             <option value="<?php echo $category->getId(); ?>"
-                                                <?php
-                                                if ($book && in_array($category->getId(), array_column($book->getCategories(), 'id'))) {
-                                                    echo 'selected';
-                                                }
-                                                ?>>
+                                                <?php echo ($book && in_array($category->getId(), array_column($book->getCategories(), 'id'))) ? 'selected' : ''; ?>>
                                                 <?php echo htmlspecialchars($category->getName()); ?>
                                             </option>
                                         <?php endforeach; ?>
