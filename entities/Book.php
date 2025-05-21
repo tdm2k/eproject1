@@ -6,6 +6,7 @@ class Book
 {
     private ?int $id = null;
     private ?string $title = null;
+    private ?string $image_url = null;
     private ?string $author = null;
     private ?string $publisher = null;
     private ?int $publish_year = null;
@@ -14,7 +15,9 @@ class Book
     private array $categories = [];
 
     public function __construct(
+        ?int $id = null,
         ?string $title = null,
+        ?string $image_url = null,
         ?string $author = null,
         ?string $publisher = null,
         ?int $publish_year = null,
@@ -22,7 +25,9 @@ class Book
         ?string $buy_link = null,
         array $categories = []
     ) {
+        $this->id = $id;
         $this->title = $title;
+        $this->image_url = $image_url;
         $this->author = $author;
         $this->publisher = $publisher;
         $this->publish_year = $publish_year;
@@ -39,6 +44,10 @@ class Book
     public function getTitle(): ?string
     {
         return $this->title;
+    }
+    public function getImageUrl(): ?string
+    {
+        return $this->image_url;
     }
     public function getAuthor(): ?string
     {
@@ -70,6 +79,10 @@ class Book
     {
         $this->title = $title;
     }
+    public function setImageUrl(?string $image_url): void
+    {
+        $this->image_url = $image_url;
+    }
     public function setAuthor(?string $author): void
     {
         $this->author = $author;
@@ -98,9 +111,10 @@ class Book
     // Phương thức load từ mảng
     public static function fromArray(array $data): self
     {
-        $obj = new self(
+        return new self(
             $data['id'] ?? null,
             $data['title'] ?? null,
+            $data['image_url'] ?? null,
             $data['author'] ?? null,
             $data['publisher'] ?? null,
             $data['publish_year'] ?? null,
@@ -108,8 +122,5 @@ class Book
             $data['buy_link'] ?? null,
             $data['categories'] ?? []
         );
-
-        $obj->id = $data['id'] ?? null;
-        return $obj;
     }
 }

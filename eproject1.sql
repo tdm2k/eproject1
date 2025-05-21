@@ -97,6 +97,7 @@ CREATE TABLE videos (
 CREATE TABLE books (
     id INT PRIMARY KEY AUTO_INCREMENT,
     title VARCHAR(255),
+    image_url VARCHAR(2083),
     author VARCHAR(255),
     publisher VARCHAR(255),
     publish_year INT, -- Hoặc dùng kiểu YEAR(4)
