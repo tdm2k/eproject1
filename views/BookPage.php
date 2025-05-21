@@ -123,7 +123,7 @@ $secondColumnCategories = array_slice($categories, $categoriesPerColumn);
 
         <div class="row d-flex">
             <div class="col-lg-6">
-                <h1 class="display-4 mb-4 fw-bold">Books</h1>
+                <h1 class="display-4 mb-4 fw-bold">Books List</h1>
                 <p class="lead mb-5">Discover our collection of space-related books</p>
             </div>
             <div class="col-lg-6">
