@@ -3,7 +3,7 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-require_once '../entities/Category.php'; // Include Category class
+require_once '../entities/Category.php'; 
 require_once '../models/CategoryModel.php';
 
 try {
