@@ -3,12 +3,10 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-
 require_once '../controllers/BookController.php';
-require_once '../controllers/CategoryController.php';
 
 $bookController = new BookController();
-// $categoryController = new CategoryController();
+
 
 $response = $bookController->index();
 $books = $response['status'] === 'success' ? $response['data'] : [];
