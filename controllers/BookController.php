@@ -178,6 +178,11 @@ class BookController {
                     exit;
                 }
                 $result = $this->add($_POST);
+                if ($result['status'] === 'success') {
+                    header('Location: ../admin/AdminBook.php?success=book-added');
+                } else {
+                    header('Location: ../admin/AdminBook.php?error=failed-to-add');
+                }
                 break;
 
             case 'update':
@@ -186,6 +191,11 @@ class BookController {
                     exit;
                 }
                 $result = $this->update($_POST['id'], $_POST);
+                if ($result['status'] === 'success') {
+                    header('Location: ../admin/AdminBook.php?success=book-updated');
+                } else {
+                    header('Location: ../admin/AdminBook.php?error=failed-to-update');
+                }
                 break;
 
             case 'delete':
@@ -194,17 +204,16 @@ class BookController {
                     exit;
                 }
                 $result = $this->delete($_GET['id']);
+                if ($result['status'] === 'success') {
+                    header('Location: ../admin/AdminBook.php?success=book-deleted');
+                } else {
+                    header('Location: ../admin/AdminBook.php?error=failed-to-delete');
+                }
                 break;
 
             default:
                 header('Location: ../admin/AdminBook.php?error=invalid-action');
                 exit;
-        }
-
-        if ($result['status'] === 'success') {
-            header('Location: ../admin/AdminBook.php?status=success&message=' . urlencode($result['message']));
-        } else {
-            header('Location: ../admin/AdminBook.php?error=' . urlencode($result['message']));
         }
         exit;
     }

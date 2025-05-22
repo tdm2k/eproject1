@@ -20,9 +20,10 @@ try {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add New Planet</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <title>Space Dot Com | Admin - Add Planet</title>
+    <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="../assets/css/simple-notification.css">
     <style>
         .main-page-content {
             margin-left: 280px;
@@ -38,21 +39,57 @@ try {
         <main class="container mt-4">
             <div class="row">
                 <div class="col-md-12">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h2>Add New Planet</h2>
+                        <a href="AdminPlanet.php" class="btn btn-secondary">
+                            <i class="bi bi-arrow-left"></i> Back to Planets
+                        </a>
+                    </div>
+
+                    <?php
+                    $errorMessages = [
+                        'invalid-action' => 'Invalid action specified.',
+                        'invalid-request-method' => 'Invalid request method.',
+                        'empty-planet-name' => 'Planet name cannot be empty.',
+                        'invalid-planet-id' => 'Invalid planet ID.',
+                        'invalid-file-type' => 'Invalid file type. Only JPG, PNG and GIF are allowed.',
+                        'file-too-large' => 'File is too large. Maximum size is 5MB.',
+                        'upload-failed' => 'Failed to upload file.',
+                        'add-failed' => 'Failed to add planet.',
+                        'update-failed' => 'Failed to update planet.',
+                        'delete-failed' => 'Failed to delete planet.',
+                        'restore-failed' => 'Failed to restore planet.',
+                        'unknown-error' => 'An unknown error occurred.'
+                    ];
+
+                    if (isset($_GET['error']) && isset($errorMessages[$_GET['error']])): ?>
+                        <div class="alert alert-danger error-notification show" role="alert">
+                            <i class="bi bi-x-circle-fill me-2"></i>
+                            <?= $errorMessages[$_GET['error']] ?>
+                        </div>
+                    <?php endif; ?>
+
+                    <?php
+                    $successMessages = [
+                        'planet-added' => 'Planet added successfully!',
+                        'planet-updated' => 'Planet updated successfully!',
+                        'planet-deleted' => 'Planet deleted successfully!',
+                        'planet-restored' => 'Planet restored successfully!',
+                        'planet-permanently-deleted' => 'Planet permanently deleted!'
+                    ];
+
+                    if (isset($_GET['success']) && isset($successMessages[$_GET['success']])): ?>
+                        <div class="alert alert-success success-notification show" role="alert">
+                            <i class="bi bi-check-circle-fill me-2"></i>
+                            <?= $successMessages[$_GET['success']] ?>
+                        </div>
+                    <?php endif; ?>
+
                     <div class="card">
                         <div class="card-header">
                             <h3 class="card-title">Add New Planet</h3>
                         </div>
                         <div class="card-body">
-                            <?php if (isset($_GET['error'])): ?>
-                                <div class="alert alert-danger">
-                                    <?php echo htmlspecialchars($_GET['error']); ?>
-                                </div>
-                            <?php elseif (isset($error)): ?>
-                                <div class="alert alert-danger">
-                                    <?php echo htmlspecialchars($error); ?>
-                                </div>
-                            <?php endif; ?>
-
                             <form action="../controllers/PlanetController.php" method="POST" enctype="multipart/form-data">
                                 <input type="hidden" name="action" value="add">
                                 <div class="mb-3">
@@ -167,7 +204,10 @@ try {
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Bootstrap -->
+    <script src="../vendor/jquery/jquery.min.js"></script>
+    <script src="../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="../assets/js/simple-notification.js"></script>
     <script>
         function previewImage(input) {
             const preview = document.getElementById('imagePreview');

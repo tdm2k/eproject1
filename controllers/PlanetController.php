@@ -220,12 +220,34 @@ class PlanetController {
     }
 
     private function redirectWithStatus($status, $message) {
-        header("Location: ../admin/AdminPlanet.php?status=$status&message=" . urlencode($message));
+        $successMessages = [
+            'Planet added successfully' => 'planet-added',
+            'Planet updated successfully' => 'planet-updated',
+            'Planet deleted successfully' => 'planet-deleted',
+            'Planet restored successfully' => 'planet-restored',
+            'Planet permanently deleted' => 'planet-permanently-deleted'
+        ];
+        
+        $successKey = $successMessages[$message] ?? 'unknown-success';
+        header("Location: ../admin/AdminPlanet.php?success=$successKey");
         exit;
     }
 
     private function redirectWithError($error) {
-        header("Location: ../admin/AdminPlanet.php?error=$error");
+        $errorMessages = [
+            'empty-planet-name' => 'empty-planet-name',
+            'invalid-planet-id' => 'invalid-planet-id',
+            'invalid-file-type' => 'invalid-file-type',
+            'file-too-large' => 'file-too-large',
+            'upload-failed' => 'upload-failed',
+            'add-failed' => 'add-failed',
+            'update-failed' => 'update-failed',
+            'delete-failed' => 'delete-failed',
+            'restore-failed' => 'restore-failed'
+        ];
+
+        $errorKey = $errorMessages[$error] ?? 'unknown-error';
+        header("Location: ../admin/AdminPlanet.php?error=$errorKey");
         exit;
     }
 }
