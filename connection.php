@@ -1,7 +1,7 @@
 <?php
 class Connection
 {
-    private $host = "localhost:3307";
+    private $host = "localhost";
     private $username = "root";
     private $password = "12345678";
     private $dbname = "eproject1";

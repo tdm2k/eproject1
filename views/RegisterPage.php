@@ -30,7 +30,7 @@ if (session_status() === PHP_SESSION_NONE) {
         }
 
         .image-section {
-            background-image: url('../../assets/images/background-register.jpg');
+            background-image: url('../../assets/images/background-login.jpg');
             background-size: cover;
             background-position: center center;
             background-repeat: no-repeat;

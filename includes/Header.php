@@ -8,7 +8,7 @@ $showSearchBar = !in_array($currentPageName, $hideSearchOnPages);
         <a class="navbar-brand me-5" href="../index.php"><img src="../assets/images/space-com-black-small.png" height="50"></a>
         <?php if ($showSearchBar): ?>
             <form class="d-flex mx-auto" role="search" action="/search-results.php" method="GET" style="max-width: 500px; width: 100%;">
-                <input class="form-control me-2" type="search" placeholder="Tìm kiếm hành tinh, ngôi sao..." aria-label="Search" name="q">
+                <input class="form-control me-2" type="search" placeholder="Search for planets, constellations, comets..." aria-label="Search" name="q">
             </form>
         <?php endif; ?>
         <!-- Lưu ý: action="/search-results.php" và name="q" chỉ là ví dụ -->
