@@ -38,7 +38,7 @@ CREATE TABLE `book_categories` (
 
 LOCK TABLES `book_categories` WRITE;
 /*!40000 ALTER TABLE `book_categories` DISABLE KEYS */;
-INSERT INTO `book_categories` VALUES (9,1),(10,1),(17,1),(12,2),(17,2),(11,3),(17,3);
+INSERT INTO `book_categories` VALUES (9,1),(10,1),(17,1),(12,2),(17,2),(11,3),(17,3),(20,3);
 /*!40000 ALTER TABLE `book_categories` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -51,4 +51,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-05-22 10:29:12
+-- Dump completed on 2025-05-27 10:01:11
