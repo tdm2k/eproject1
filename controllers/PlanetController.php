@@ -15,8 +15,20 @@ class PlanetController {
 
     public function index() {
         try {
-            $planets = $this->planetModel->getAllPlanets();
-            return ['status' => 'success', 'data' => $planets];
+            // Check if this is an admin request
+            $isAdmin = strpos($_SERVER['REQUEST_URI'], 'admin') !== false;
+            
+            if ($isAdmin) {
+                // For admin page, use pagination
+                $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+                $perPage = 5;
+                $result = $this->planetModel->getPaginatedPlanets($page, $perPage);
+                return ['status' => 'success', 'data' => $result];
+            } else {
+                // For public page, show all planets
+                $result = $this->planetModel->getAllPlanets();
+                return ['status' => 'success', 'data' => ['planets' => $result]];
+            }
         } catch (Exception $e) {
             return ['status' => 'error', 'message' => 'Failed to fetch planets: ' . $e->getMessage()];
         }

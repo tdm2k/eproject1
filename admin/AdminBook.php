@@ -7,14 +7,31 @@ require_once '../controllers/BookController.php';
 
 $bookController = new BookController();
 
-
+$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 $response = $bookController->index();
-$books = $response['status'] === 'success' ? $response['data'] : [];
+$paginationData = $response['status'] === 'success' ? $response['data'] : null;
+$books = $paginationData ? $paginationData['books'] : [];
 $error_message = $response['status'] === 'error' ? $response['message'] : null;
 
 $error = $_GET['error'] ?? null;
 $status = $_GET['status'] ?? null;
 $message = $_GET['message'] ?? null;
+$errorMessages = [
+    'invalid-action' => 'Invalid action specified.',
+    'invalid-request-method' => 'Invalid request method.',
+    'empty-book-title' => 'Book title cannot be empty.',
+    'invalid-book-id' => 'Invalid book ID.',
+    'book-not-found' => 'Book not found.',
+    'failed-to-add' => 'Failed to add book.',
+    'failed-to-update' => 'Failed to update book.',
+    'failed-to-delete' => 'Failed to delete book.',
+    'error-loading-categories' => 'Error loading categories.'
+];
+$successMessages = [
+    'book-added' => 'Book added successfully!',
+    'book-updated' => 'Book updated successfully!',
+    'book-deleted' => 'Book deleted successfully!'
+];
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -56,17 +73,6 @@ $message = $_GET['message'] ?? null;
                     </div>
 
                     <?php
-                    $errorMessages = [
-                        'invalid-action' => 'Invalid action specified.',
-                        'invalid-request-method' => 'Invalid request method.',
-                        'empty-book-title' => 'Book title cannot be empty.',
-                        'invalid-book-id' => 'Invalid book ID.',
-                        'book-not-found' => 'Book not found.',
-                        'failed-to-add' => 'Failed to add book.',
-                        'failed-to-update' => 'Failed to update book.',
-                        'failed-to-delete' => 'Failed to delete book.',
-                        'error-loading-categories' => 'Error loading categories.'
-                    ];
 
                     if (isset($_GET['error']) && isset($errorMessages[$_GET['error']])): ?>
                         <div class="alert alert-danger error-notification show" role="alert">
@@ -76,11 +82,7 @@ $message = $_GET['message'] ?? null;
                     <?php endif; ?>
 
                     <?php
-                    $successMessages = [
-                        'book-added' => 'Book added successfully!',
-                        'book-updated' => 'Book updated successfully!',
-                        'book-deleted' => 'Book deleted successfully!'
-                    ];
+
 
                     if (isset($_GET['success']) && isset($successMessages[$_GET['success']])): ?>
                         <div class="alert alert-success success-notification show" role="alert">
@@ -163,6 +165,43 @@ $message = $_GET['message'] ?? null;
                                     </tbody>
                                 </table>
                             </div>
+                            <nav aria-label="Page navigation" class="mt-4">
+                                <ul class="pagination justify-content-center">
+                                    <?php if ($paginationData['current_page'] > 1): ?>
+                                        <li class="page-item">
+                                            <a class="page-link" href="?page=<?php echo $paginationData['current_page'] - 1; ?>" aria-label="Previous">
+                                                <span aria-hidden="true">&laquo;</span>
+                                            </a>
+                                        </li>
+                                    <?php else: ?>
+                                        <li class="page-item disabled">
+                                            <span class="page-link" aria-label="Previous">
+                                                <span aria-hidden="true">&laquo;</span>
+                                            </span>
+                                        </li>
+                                    <?php endif; ?>
+
+                                    <?php for ($i = 1; $i <= $paginationData['total_pages']; $i++): ?>
+                                        <li class="page-item <?php echo $i === $paginationData['current_page'] ? 'active' : ''; ?>">
+                                            <a class="page-link" href="?page=<?php echo $i; ?>"><?php echo $i; ?></a>
+                                        </li>
+                                    <?php endfor; ?>
+
+                                    <?php if ($paginationData['current_page'] < $paginationData['total_pages']): ?>
+                                        <li class="page-item">
+                                            <a class="page-link" href="?page=<?php echo $paginationData['current_page'] + 1; ?>" aria-label="Next">
+                                                <span aria-hidden="true">&raquo;</span>
+                                            </a>
+                                        </li>
+                                    <?php else: ?>
+                                        <li class="page-item disabled">
+                                            <span class="page-link" aria-label="Next">
+                                                <span aria-hidden="true">&raquo;</span>
+                                            </span>
+                                        </li>
+                                    <?php endif; ?>
+                                </ul>
+                            </nav>
                         </div>
                     </div>
                 </div>

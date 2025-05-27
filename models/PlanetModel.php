@@ -186,5 +186,43 @@ class PlanetModel
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
         return $stmt->execute();
     }
+
+    // Get paginated planets
+    public function getPaginatedPlanets(int $page = 1, int $perPage = 5): array
+    {
+        // Calculate offset
+        $offset = ($page - 1) * $perPage;
+
+        // Get total number of planets
+        $countQuery = "SELECT COUNT(*) as total FROM $this->table WHERE is_deleted = 0";
+        $countStmt = $this->conn->prepare($countQuery);
+        $countStmt->execute();
+        $total = $countStmt->fetch(PDO::FETCH_ASSOC)['total'];
+
+        // Get paginated planets
+        $query = "SELECT p.*, c.name as category_name 
+                  FROM $this->table p 
+                  LEFT JOIN categories c ON p.category_id = c.id 
+                  WHERE p.is_deleted = 0 
+                  ORDER BY p.id DESC
+                  LIMIT :limit OFFSET :offset";
+        
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindValue(':limit', $perPage, PDO::PARAM_INT);
+        $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+        $stmt->execute();
+        
+        $planets = [];
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $planets[] = Planet::fromArray($row);
+        }
+
+        return [
+            'planets' => $planets,
+            'total' => $total,
+            'total_pages' => ceil($total / $perPage),
+            'current_page' => $page
+        ];
+    }
 }
 ?>

@@ -44,6 +44,7 @@ $message = $_GET['message'] ?? null;
     <title>Space Dot Com | Book Details</title>
     <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
     <style>
         body {
             padding-top: 76px;
@@ -55,7 +56,7 @@ $message = $_GET['message'] ?? null;
             background-repeat: no-repeat;
             background-size: cover;
             background-position: center center;
-            min-height: 50vh;
+            min-height: 80vh;
             width: 100%;
             display: flex;
             align-items: center;
@@ -116,19 +117,19 @@ $message = $_GET['message'] ?? null;
     <?php include '../includes/Header.php'; ?>
 
     <!-- Section: Book Header -->
-    <section class="bg-book">
+    <section class="bg-book" data-aos="zoom-in" data-aos-delay="100">
         <div class="container">
             <div class="row">
                 <div class="col-lg-8">
-                    <h1 class="display-4 fw-bold mb-4"><?php echo html_entity_decode(htmlspecialchars($book ? $book->getTitle() : 'Book Details')); ?></h1>
-                    <p class="fs-5">Discover more about this fascinating book</p>
+                    <h1 class="display-4 fw-bold mb-4" data-aos="fade-right" data-aos-delay="300"><?php echo html_entity_decode(htmlspecialchars($book ? $book->getTitle() : 'Book Details')); ?></h1>
+                    <p class="fs-5" data-aos="fade-left" data-aos-delay="300">Discover more about this fascinating book</p>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Section: Book Details -->
-    <section class="section">
+    <section class="section" data-aos="fade-up" data-aos-delay="100">
         <div class="container">
             <?php if ($message): ?>
                 <div class="alert <?php echo strpos($status, 'failed') === false ? 'alert-success' : 'alert-danger'; ?>" role="alert">
@@ -143,7 +144,7 @@ $message = $_GET['message'] ?? null;
             <?php elseif ($book): ?>
                 <div class="container">
                     <div class="row">
-                        <div class="col-lg-4 text-center mb-4">
+                        <div class="col-lg-4 text-center mb-4"  data-aos="flip-right" data-aos-delay="200">
                             <?php if ($book->getImageUrl()): ?>
                                 <img src="../<?php echo htmlspecialchars($book->getImageUrl()); ?>"
                                     alt="<?php echo html_entity_decode(htmlspecialchars($book->getTitle())); ?>"
@@ -222,6 +223,10 @@ $message = $_GET['message'] ?? null;
 
     <script src="../vendor/jquery/jquery.min.js"></script>
     <script src="../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+    <script>
+        AOS.init();
+    </script>
 </body>
 
 </html> 

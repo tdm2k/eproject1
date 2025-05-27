@@ -12,7 +12,8 @@ $categories = $categoriesResponse['status'] === 'success' ? $categoriesResponse[
 
 // Lấy tất cả sách
 $response = $controller->index();
-$allBooks = $response['status'] === 'success' ? $response['data'] : [];
+$paginationData = $response['status'] === 'success' ? $response['data'] : null;
+$allBooks = $paginationData ? $paginationData['books'] : [];
 $error_message = $response['status'] === 'error' ? $response['message'] : null;
 
 // Lấy thông báo từ query string (nếu có)
