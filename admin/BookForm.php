@@ -13,7 +13,21 @@ $book = null;
 $categories = [];
 $error = null;
 $success = null;
-
+$errorMessages = [
+    'invalid-action' => 'Invalid action specified.',
+    'invalid-request-method' => 'Invalid request method.',
+    'invalid-book-id' => 'Invalid book ID.',
+    'book-not-found' => 'Book not found.',
+    'failed-to-add' => 'Failed to add book.',
+    'failed-to-update' => 'Failed to update book.',
+    'failed-to-delete' => 'Failed to delete book.',
+    'error-loading-categories' => 'Error loading categories.'
+];
+$successMessages = [
+    'book-added' => 'Book added successfully!',
+    'book-updated' => 'Book updated successfully!',
+    'book-deleted' => 'Book deleted successfully!'
+];
 // Fetch all categories
 try {
     $categoriesResponse = $bookController->getAllCategories();
@@ -76,16 +90,7 @@ $pageTitle = $book ? 'Edit Book' : 'Add New Book';
                     </div>
 
                     <?php
-                    $errorMessages = [
-                        'invalid-action' => 'Invalid action specified.',
-                        'invalid-request-method' => 'Invalid request method.',
-                        'invalid-book-id' => 'Invalid book ID.',
-                        'book-not-found' => 'Book not found.',
-                        'failed-to-add' => 'Failed to add book.',
-                        'failed-to-update' => 'Failed to update book.',
-                        'failed-to-delete' => 'Failed to delete book.',
-                        'error-loading-categories' => 'Error loading categories.'
-                    ];
+                    
 
                     if (isset($_GET['error']) && isset($errorMessages[$_GET['error']])): ?>
                         <div class="alert alert-danger error-notification show" role="alert">
@@ -95,11 +100,7 @@ $pageTitle = $book ? 'Edit Book' : 'Add New Book';
                     <?php endif; ?>
 
                     <?php
-                    $successMessages = [
-                        'book-added' => 'Book added successfully!',
-                        'book-updated' => 'Book updated successfully!',
-                        'book-deleted' => 'Book deleted successfully!'
-                    ];
+                    
 
                     if (isset($_GET['success']) && isset($successMessages[$_GET['success']])): ?>
                         <div class="alert alert-success success-notification show" role="alert">
