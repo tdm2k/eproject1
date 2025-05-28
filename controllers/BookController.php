@@ -53,8 +53,10 @@ class BookController {
 
     public function index() {
         try {
-            $books = $this->model->getAllBooks();
-            return ['status' => 'success', 'data' => $books];
+            $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+            $perPage = 5; // Number of books per page
+            $result = $this->model->getPaginatedBooks($page, $perPage);
+            return ['status' => 'success', 'data' => $result];
         } catch (Exception $e) {
             return ['status' => 'error', 'message' => $e->getMessage()];
         }

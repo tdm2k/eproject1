@@ -7,7 +7,7 @@ if (session_status() === PHP_SESSION_NONE) {
 require_once '../controllers/PlanetController.php';
 $controller = new PlanetController();
 $response = $controller->index();
-$planets = $response['status'] === 'success' ? $response['data'] : [];
+$planets = $response['status'] === 'success' ? $response['data']['planets'] : [];
 $error_message = $response['status'] === 'error' ? $response['message'] : null;
 
 // Lấy thông báo từ query string (nếu có)
@@ -23,6 +23,8 @@ $message = $_GET['message'] ?? null;
     <title>Space Dot Com | Planets</title>
     <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+
     <style>
         body {
             padding-top: 76px;
@@ -97,19 +99,19 @@ $message = $_GET['message'] ?? null;
         <div class="container">
             <div class="row">
                 <div class="col-lg-8">
-                    <h1 class="display-4 fw-bold mb-4">About the Planets</h1>
-                    <p class="fs-5 mb-5">
+                    <h1 class="display-4 fw-bold mb-4" data-aos="fade-up" data-aos-delay="100">About the Planets</h1>
+                    <p class="fs-5 mb-5" data-aos="fade-up" data-aos-delay="200">
                         Our solar system has eight planets: Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus, and Neptune.
                         There are five officially recognized dwarf planets in our solar system: Ceres, Pluto, Haumea, Makemake, and Eris.
                     </p>
                     <div class="d-flex">
                         <div class="d-flex gap-4 align-items-center" style="height: 200px; margin-right: 100px;">
-                            <div class="text-size">8</div>
-                            <div class="fs-5 fw-semibold">Planets</div>
+                            <div class="text-size" data-aos="zoom-in" data-aos-delay="400">8</div>
+                            <div class="fs-5 fw-semibold" data-aos="fade-up" data-aos-delay="500">Planets</div>
                         </div>
                         <div class="d-flex gap-4 align-items-center" style="height: 200px;">
-                            <div class="text-size">5</div>
-                            <div class="fs-5 fw-semibold">Dwarf Planets</div>
+                            <div class="text-size" data-aos="zoom-in" data-aos-delay="600">5</div>
+                            <div class="fs-5 fw-semibold" data-aos="fade-up" data-aos-delay="700">Dwarf Planets</div>
                         </div>
                     </div>
                 </div>
@@ -120,8 +122,8 @@ $message = $_GET['message'] ?? null;
     <!-- Section: Introduction -->
     <section class="section">
         <div class="container">
-            <h2 class="display-4 fw-bold mb-4">Introduction</h2>
-            <div class="mb-4 fs-5">
+            <h2 class="display-4 fw-bold mb-4" data-aos="fade-up" data-aos-delay="100">Introduction</h2>
+            <div class="mb-4 fs-5" data-aos="fade-up" data-aos-delay="200">
                 <p class="mb-3">
                     What is a planet? The word goes back to the ancient Greek word <i>planēt</i>, and it means "wanderer."
                     A more modern definition can be found in the Merriam-Webster dictionary, which defines a planet as
@@ -133,7 +135,7 @@ $message = $_GET['message'] ?? null;
                     caused Pluto's famous "demotion" to a dwarf planet.
                 </p>
             </div>
-            <a href="PlanetReadMore.php" class="text-decoration-none fw-bold text-primary fs-5">Read more
+            <a href="PlanetReadMore.php" class="text-decoration-none fw-bold text-primary fs-5" data-aos="fade-up" data-aos-delay="300">Read more
                 <i class="bi bi-arrow-right-square-fill"></i>
             </a>
         </div>
@@ -143,13 +145,17 @@ $message = $_GET['message'] ?? null;
     <!-- Section: Planets List -->
     <section class="section">
         <div class="container mb-5">
-            <h2 class="display-5 fw-bold">Planets List</h2>
+            <h2 class="display-5 fw-bold">Planets</h2>
         </div>
         <div class="container">
             <?php if (!empty($planets)): ?>
                 <div class="row row-cols-1 row-cols-md-4 g-4">
-                    <?php foreach ($planets as $planet): ?>
-                        <div class="col">
+                    <?php 
+                    $delay = 0;
+                    foreach ($planets as $planet): 
+                        $delay += 100; // Tăng delay 100ms cho mỗi hành tinh
+                    ?>
+                        <div class="col" data-aos="flip-left" data-aos-delay="<?php echo $delay; ?>">
                             <div class="card planet-card h-100" style="width: 100%;">
                                 <div class="overflow-hidden">
                                     <?php if ($planet->getImage()): ?>
@@ -166,7 +172,7 @@ $message = $_GET['message'] ?? null;
                                     <h5 class="card-title fs-4"><?php
                                                                 $title = html_entity_decode(htmlspecialchars($planet->getName() ?? 'N/A'));
                                                                 echo strlen($title) > 50 ? substr($title, 0, 50) . '...' : $title;
-                                                                ?> Facts</h5>
+                                                                ?></h5>
                                     <p class="card-text">
                                         <?php
                                         $desc = html_entity_decode(htmlspecialchars($planet->getDescription() ?? 'N/A'));
@@ -187,13 +193,14 @@ $message = $_GET['message'] ?? null;
             <?php endif; ?>
         </div>
     </section>
-    <section>
-
-    </section>
     <?php include '../includes/Footer.php'; ?>
 
     <script src="../vendor/jquery/jquery.min.js"></script>
     <script src="../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+    <script>
+        AOS.init();
+    </script>
 </body>
 
 </html>
