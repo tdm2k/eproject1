@@ -65,14 +65,16 @@ class Constellation
     // Phương thức load từ mảng
     public static function fromArray(array $data): self
     {
+        $categoryId = isset($data['category_id']) ? (int)$data['category_id'] : null;
+
         $obj = new self(
             $data['name'] ?? null,
             $data['description'] ?? null,
             $data['notable_stars'] ?? null,
-            $data['category_id'] ?? null
+            $categoryId
         );
 
-        $obj->id = $data['id'] ?? null;
+        $obj->id = isset($data['id']) ? (int)$data['id'] : null;
         return $obj;
     }
 }
