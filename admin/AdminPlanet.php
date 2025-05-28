@@ -115,7 +115,7 @@ $successMessages = [
 
             <div class="container py-5">
                 <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h1 class="display-4">Planet Management</h1>
+                    <h1 class="display-4">Planets Management</h1>
                     <div>
                         <a href="PlanetForm.php" class="btn btn-primary">
                             <i class="bi bi-plus-circle"></i> Add New Planet
@@ -136,7 +136,7 @@ $successMessages = [
                 <?php endif; ?>
 
                 <?php
-                
+
                 if (isset($_GET['success']) && isset($successMessages[$_GET['success']])): ?>
                     <div class="alert alert-success success-notification show" role="alert">
                         <i class="bi bi-check-circle-fill me-2"></i>
@@ -153,7 +153,7 @@ $successMessages = [
 
                 <!-- Bảng dữ liệu -->
                 <div class="table-responsive">
-                    <table class="table table-striped table-hover">
+                    <table class="table table-striped">
                         <thead>
                             <tr>
                                 <th>ID</th>
