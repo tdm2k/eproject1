@@ -3,7 +3,7 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-require_once '../entities/Category.php'; 
+require_once '../entities/Category.php';
 require_once '../models/CategoryModel.php';
 
 try {
@@ -199,9 +199,9 @@ try {
             </div>
         </main>
 
-        <div>
+        <footer class="mt-auto">
             <?php include('../admin/includes/AdminFooter.php'); ?>
-        </div>
+        </footer>
     </div>
 
     <!-- Bootstrap -->

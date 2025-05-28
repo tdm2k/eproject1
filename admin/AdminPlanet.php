@@ -204,9 +204,9 @@ $error = $_GET['error'] ?? null;
         </main>
 
         <!-- Footer -->
-        <div>
+        <footer class="mt-auto">
             <?php include('../admin/includes/AdminFooter.php'); ?>
-        </div>
+        </footer>
     </div>
 
     <!-- Bootstrap -->

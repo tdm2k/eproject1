@@ -141,7 +141,7 @@ $pageTitle = $book ? 'Edit Book' : 'Add New Book';
                                         <?php endforeach; ?>
                                     </select>
                                 </div>
-                               
+
                                 <div class="mb-3">
                                     <label for="image" class="form-label">Book Cover Image</label>
                                     <?php if ($book && $book->getImageUrl()): ?>
@@ -166,9 +166,9 @@ $pageTitle = $book ? 'Edit Book' : 'Add New Book';
         </main>
 
         <!-- Footer -->
-        <div>
+        <footer class="mt-auto">
             <?php include('../admin/includes/AdminFooter.php'); ?>
-        </div>
+        </footer>
     </div>
 
     <!-- Bootstrap -->
@@ -176,4 +176,4 @@ $pageTitle = $book ? 'Edit Book' : 'Add New Book';
     <script src="../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 </body>
 
-</html> 
+</html>

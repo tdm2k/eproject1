@@ -166,7 +166,7 @@ $pageTitle = $book ? 'Edit Book' : 'Add New Book';
                                         <?php endif; ?>
                                     </select>
                                 </div>
-                               
+
                                 <div class="mb-3">
                                     <label for="image" class="form-label">Book Image</label>
                                     <input type="file" class="form-control" id="image" name="image" accept="image/*" onchange="previewImage(this)">
@@ -192,9 +192,9 @@ $pageTitle = $book ? 'Edit Book' : 'Add New Book';
         </main>
 
         <!-- Footer -->
-        <div>
+        <footer class="mt-auto">
             <?php include('../admin/includes/AdminFooter.php'); ?>
-        </div>
+        </footer>
     </div>
 
     <!-- Bootstrap -->
@@ -234,4 +234,4 @@ $pageTitle = $book ? 'Edit Book' : 'Add New Book';
 
 </body>
 
-</html> 
+</html>

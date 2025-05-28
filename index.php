@@ -37,24 +37,31 @@ if (session_status() === PHP_SESSION_NONE) {
 
         <div class="position-absolute start-0 w-100 text-white px-5" style="top: 30%; z-index: 3;">
             <h1 class="display-4 fw-bold">Welcome to the Universe!</h1>
-            <p class="lead">Embark on a journey through the mysteries and wonders of space.</p>
+            <p class="lead" style="margin-bottom: 200px;">Embark on a journey through the mysteries and wonders of space.</p>
+            <p>From the birth of stars to the deepest black holes, our universe is a canvas of breathtaking phenomena
+                <br>waiting to be explored. Discover the latest cosmic events, delve into groundbreaking scientific theorie and
+                <br> marvel at stunning celestial photography. Join us as we unravel the secrets of the unknown cosmos.
+            </p>
         </div>
     </div>
 
     <!-- Page Content -->
     <div class="container">
         <!-- Success Notification -->
-        <?php if (isset($_GET['status']) && $_GET['status'] === 'logged_out'): ?>
-            <div class="alert alert-success success-notification show" role="alert">
-                <i class="bi bi-check-circle-fill me-2"></i> Logged out successfully!
-            </div>
-        <?php endif; ?>
+        <?php
+        $messages = [
+            'logged_out' => 'Logged out successfully!',
+            'password_reset_link_sent' => 'Password reset request sent successfully! Please check your email.',
+            'password_updated' => 'Password changed successfully!',
+            'user_updated' => 'User profile updated successfully!'
+        ];
 
-        <?php if (isset($_GET['success']) && $_GET['success'] === 'password_reset_link_sent'): ?>
-            <div class="alert alert-success success-notification show" role="alert">
-                <i class="bi bi-check-circle-fill me-2"></i> Password reset request sent successfully! Please check your email.
-            </div>
-        <?php endif; ?>
+        $msgKey = $_GET['status'] ?? ($_GET['success'] ?? null);
+
+        if ($msgKey && isset($messages[$msgKey])) {
+            echo '<div class="alert alert-success success-notification show" role="alert"><i class="bi bi-check-circle-fill me-2"></i> ' . htmlspecialchars($messages[$msgKey]) . '</div>';
+        }
+        ?>
 
         <!-- Error Notification -->
         <?php if (isset($_GET['error'])):
@@ -123,6 +130,92 @@ if (session_status() === PHP_SESSION_NONE) {
         </div>
     </div>
 
+    <div id="quoteCarousel" class="carousel slide my-5" data-bs-ride="carousel">
+        <div class="carousel-inner text-center bg-dark text-white rounded shadow p-4">
+
+            <!-- Slide 1 -->
+            <div class="carousel-item active">
+                <img src="../assets/images/quotes/hawking.jpg" class="rounded-circle mb-3" style="width: 200px; height: 200px; object-fit: cover;" alt="Stephen Hawking">
+                <h5>Stephen Hawking</h5>
+                <p class="lead fst-italic">“Remember to look up at the stars and not down at your feet.”</p>
+            </div>
+
+            <!-- Slide 2 -->
+            <div class="carousel-item">
+                <img src="../assets/images/quotes/sagan.jpg" class="rounded-circle mb-3" style="width: 200px; height: 200px; object-fit: cover;" alt="Carl Sagan">
+                <h5>Carl Sagan</h5>
+                <p class="lead fst-italic">“The cosmos is within us. We are made of star-stuff.”</p>
+            </div>
+
+            <!-- Slide 3 -->
+            <div class="carousel-item">
+                <img src="../assets/images/quotes/neil.jpg" class="rounded-circle mb-3" style="width: 200px; height: 200px; object-fit: cover;" alt="Neil deGrasse Tyson">
+                <h5>Neil deGrasse Tyson</h5>
+                <p class="lead fst-italic">“When I look up at the night sky, and I know that yes, we are part of this universe, we are in this universe, but perhaps more important than both of those facts—is that the universe is in us.”</p>
+            </div>
+
+            <!-- Slide 4 -->
+            <div class="carousel-item">
+                <img src="../assets/images/quotes/einstein.jpg" class="rounded-circle mb-3" style="width: 200px; height: 200px; object-fit: cover;" alt="Albert Einstein">
+                <h5>Albert Einstein</h5>
+                <p class="lead fst-italic">“Look deep into nature, and then you will understand everything better.”</p>
+            </div>
+
+            <!-- Slide 5 -->
+            <div class="carousel-item">
+                <img src="../assets/images/quotes/yuri.jpg" class="rounded-circle mb-3" style="width: 200px; height: 200px; object-fit: cover;" alt="Yuri Gagarin">
+                <h5>Yuri Gagarin</h5>
+                <p class="lead fst-italic">“I see Earth! It is so beautiful.”</p>
+            </div>
+
+            <!-- Slide 6 -->
+            <div class="carousel-item">
+                <img src="../assets/images/quotes/armstrong.jpg" class="rounded-circle mb-3" style="width: 200px; height: 200px; object-fit: cover;" alt="Neil Armstrong">
+                <h5>Neil Armstrong</h5>
+                <p class="lead fst-italic">“That's one small step for man, one giant leap for mankind.”</p>
+            </div>
+
+            <!-- Slide 7 -->
+            <div class="carousel-item">
+                <img src="../assets/images/quotes/buzz.jpg" class="rounded-circle mb-3" style="width: 200px; height: 200px; object-fit: cover;" alt="Buzz Aldrin">
+                <h5>Buzz Aldrin</h5>
+                <p class="lead fst-italic">“Mars is there, waiting to be reached.”</p>
+            </div>
+
+            <!-- Slide 8 -->
+            <div class="carousel-item">
+                <img src="../assets/images/quotes/newton.jpg" class="rounded-circle mb-3" style="width: 200px; height: 200px; object-fit: cover;" alt="Isaac Newton">
+                <h5>Isaac Newton</h5>
+                <p class="lead fst-italic">“If I have seen further it is by standing on the shoulders of Giants.”</p>
+            </div>
+
+            <!-- Slide 9 -->
+            <div class="carousel-item">
+                <img src="../assets/images/quotes/galileo.jpg" class="rounded-circle mb-3" style="width: 200px; height: 200px; object-fit: cover;" alt="Galileo Galilei">
+                <h5>Galileo Galilei</h5>
+                <p class="lead fst-italic">“All truths are easy to understand once they are discovered; the point is to discover them.”</p>
+            </div>
+
+            <!-- Slide 10 -->
+            <div class="carousel-item">
+                <img src="../assets/images/quotes/edwin.jpg" class="rounded-circle mb-3" style="width: 200px; height: 200px; object-fit: cover;" alt="Edwin Hubble">
+                <h5>Edwin Hubble</h5>
+                <p class="lead fst-italic">“Equipped with his five senses, man explores the universe around him and calls the adventure Science.”</p>
+            </div>
+
+        </div>
+
+        <!-- Controls -->
+        <button class="carousel-control-prev" type="button" data-bs-target="#quoteCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon bg-dark rounded-circle"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#quoteCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon bg-dark rounded-circle"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+    </div>
+
     <!-- Media Section: Videos | Articles | Books -->
     <div class="w-100 bg-light py-5">
         <div class="container">
@@ -187,19 +280,19 @@ if (session_status() === PHP_SESSION_NONE) {
 
         <div class="row g-3 justify-content-center mb-4">
             <div class="col-6 col-sm-4 col-md-2" data-aos="flip-left" data-aos-delay="700">
-                <img src="../assets/images/observatory-home-7.jpg" class="img-fluid rounded shadow-sm" alt="Observatory 1">
+                <img src="../assets/images/observatory-home-9.jpg" class="img-fluid rounded shadow-sm" alt="Observatory 1">
             </div>
             <div class="col-6 col-sm-4 col-md-2" data-aos="flip-left" data-aos-delay="800">
                 <img src="../assets/images/observatory-home-8.jpg" class="img-fluid rounded shadow-sm" alt="Observatory 2">
             </div>
             <div class="col-6 col-sm-4 col-md-2" data-aos="flip-left" data-aos-delay="900">
-                <img src="../assets/images/observatory-home-9.jpg" class="img-fluid rounded shadow-sm" alt="Observatory 3">
+                <img src="../assets/images/observatory-home-10.jpg" class="img-fluid rounded shadow-sm" alt="Observatory 3">
             </div>
             <div class="col-6 col-sm-4 col-md-2" data-aos="flip-left" data-aos-delay="1000">
-                <img src="../assets/images/observatory-home-10.jpg" class="img-fluid rounded shadow-sm" alt="Observatory 4">
+                <img src="../assets/images/observatory-home-11.jpg" class="img-fluid rounded shadow-sm" alt="Observatory 4">
             </div>
             <div class="col-6 col-sm-4 col-md-2" data-aos="flip-left" data-aos-delay="1100">
-                <img src="../assets/images/observatory-home-11.jpg" class="img-fluid rounded shadow-sm" alt="Observatory 5">
+                <img src="../assets/images/observatory-home-7.jpg" class="img-fluid rounded shadow-sm" alt="Observatory 5">
             </div>
             <div class="col-6 col-sm-4 col-md-2" data-aos="flip-left" data-aos-delay="1200">
                 <img src="../assets/images/observatory-home-12.jpg" class="img-fluid rounded shadow-sm" alt="Observatory 5">
