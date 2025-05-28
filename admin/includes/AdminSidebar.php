@@ -1,6 +1,6 @@
 <?php
 $currentPage = strtolower(basename($_SERVER['SCRIPT_NAME'], '.php'));
-$isDashboard = ($currentPage == 'dashboard' || $currentPage == 'index');
+$isDashboard = ($currentPage == 'dashboard');
 ?>
 
 <div class="position-fixed top-0 start-0 vh-100 d-flex flex-column flex-shrink-0 p-3 text-white bg-dark" style="width: 280px;" data-bs-theme="dark">
@@ -14,7 +14,7 @@ $isDashboard = ($currentPage == 'dashboard' || $currentPage == 'index');
             </a>
         </li>
         <li>
-            <a href="/admin/AdminPlanet.php" class="nav-link <?php echo ($currentPage == 'adminplanet') ? 'active' : 'text-white'; ?>">
+            <a href="/admin/AdminPlanet.php" class="nav-link <?php echo ($currentPage == 'adminplanet' || $currentPage == 'planetedit' || $currentPage == 'planetform' || $currentPage == 'planettrash') ? 'active' : 'text-white'; ?>">
                 <i class="bi bi-globe me-2"></i>
                 Planets
             </a>
@@ -44,7 +44,7 @@ $isDashboard = ($currentPage == 'dashboard' || $currentPage == 'index');
             </a>
         </li>
         <li>
-            <a href="/admin/AdminBook.php" class="nav-link <?php echo ($currentPage == 'adminbook') ? 'active' : 'text-white'; ?>">
+            <a href="/admin/AdminBook.php" class="nav-link <?php echo ($currentPage == 'adminbook' || $currentPage == 'bookedit' || $currentPage == 'bookform') ? 'active' : 'text-white'; ?>">
                 <i class="bi bi-book me-2"></i>
                 Books
             </a>

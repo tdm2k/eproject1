@@ -240,4 +240,54 @@ class BookModel
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    // Get paginated books
+    public function getPaginatedBooks(int $page = 1, int $perPage = 5): array
+    {
+        // Calculate offset
+        $offset = ($page - 1) * $perPage;
+
+        // Get total number of books
+        $countQuery = "SELECT COUNT(*) as total FROM $this->table";
+        $countStmt = $this->conn->prepare($countQuery);
+        $countStmt->execute();
+        $total = $countStmt->fetch(PDO::FETCH_ASSOC)['total'];
+
+        // Get paginated books
+        $query = "SELECT b.*, GROUP_CONCAT(c.name) as category_names 
+                  FROM $this->table b 
+                  LEFT JOIN book_categories bc ON b.id = bc.book_id 
+                  LEFT JOIN categories c ON bc.category_id = c.id 
+                  GROUP BY b.id 
+                  ORDER BY b.id DESC
+                  LIMIT :limit OFFSET :offset";
+        
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindValue(':limit', $perPage, PDO::PARAM_INT);
+        $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+        $stmt->execute();
+        
+        $books = [];
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            // Convert category names string to array
+            if (!empty($row['category_names'])) {
+                $categoryNames = explode(',', $row['category_names']);
+                $row['categories'] = array_map(function($name) {
+                    return ['name' => $name];
+                }, $categoryNames);
+            } else {
+                $row['categories'] = [];
+            }
+            unset($row['category_names']);
+            
+            $books[] = Book::fromArray($row);
+        }
+
+        return [
+            'books' => $books,
+            'total' => $total,
+            'total_pages' => ceil($total / $perPage),
+            'current_page' => $page
+        ];
+    }
 }

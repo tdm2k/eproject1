@@ -21,11 +21,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         case 'update':
             handleUpdate($userModel);
             break;
+        case 'user_update':
+            handleUserUpdate($userModel);
+            break;
         case 'delete':
             handleDelete($userModel);
             break;
         case 'change_password':
             handleChangePassword($userModel);
+            break;
+        case 'user_change_password':
+            handleUserChangePassword($userModel);
             break;
         case 'request_password':
             handleRequestPassword($resetPasswordModel, $userModel);
@@ -127,6 +133,82 @@ function handleUpdate(UserModel $userModel)
     }
 }
 
+// --- User Update ---
+function handleUserUpdate(UserModel $userModel)
+{
+    $userId = $_POST['id'];
+
+    if ($userId) {
+        $username = trim($_POST['username'] ?? '');
+        $email = trim($_POST['email'] ?? '');
+        $fullname = trim($_POST['fullname'] ?? '');
+        $phone = trim($_POST['phone'] ?? '');
+        $role = $_POST['role'] ?? 'customer';
+        $dobString = $_POST['dob'] ?? null;
+        $gender = $_POST['gender'] ?? null;
+
+        $errors = [];
+        if (empty($username)) {
+            $errors[] = 'Username cannot be empty.';
+        }
+        if (empty($email)) {
+            $errors[] = 'Email cannot be empty.';
+        } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $errors[] = 'Invalid email format.';
+        }
+
+        $existingUser = $userModel->findUserById($userId);
+        if (!$existingUser) {
+            $errors[] = 'User not found.';
+        }
+
+        $dob = null;
+        if (!empty($dobString)) {
+            try {
+                $dob = new DateTime($dobString);
+            } catch (Exception $e) {
+                $errors[] = 'Invalid date of birth format.';
+            }
+        }
+
+        if (!empty($errors)) {
+            $error_param = urlencode($errors[0]);
+            header("Location: ../views/UserProfilePage.php?error=$error_param");
+            exit;
+        }
+
+        $genderInt = null;
+        if ($gender !== null) {
+            $genderInt = (int) $gender;
+        }
+
+        $updatedUser = new User(
+            $existingUser->getPasswordHash(),
+            $username,
+            $email,
+            $fullname,
+            $phone,
+            $role,
+            $dob,
+            $genderInt,
+            $userId
+        );
+
+        $success = $userModel->updateUser($updatedUser);
+
+        if ($success) {
+            header('Location: ../index.php?success=user_updated');
+            exit;
+        } else {
+            header('Location: ../views/UserProfilePage.php?action=userList&error=user_not_updated');
+            exit;
+        }
+    } else {
+        header('Location: ../views/UserProfilePage.php?action=userList&error=invalid_user_id');
+        exit;
+    }
+}
+
 // --- Delete ---
 function handleDelete(UserModel $userModel)
 {
@@ -193,6 +275,55 @@ function handleChangePassword(UserModel $userModel)
         exit;
     } else {
         header('Location: ../admin/AdminUser.php?action=userList&error=password_not_updated');
+        exit;
+    }
+}
+
+// --- User Change Password ---
+function handleUserChangePassword(UserModel $userModel)
+{
+    $userId = $_POST['id'];
+    $oldPassword = $_POST['old_password'] ?? '';
+    $newPassword = $_POST['new_password'] ?? '';
+    $confirmPassword = $_POST['confirm_password'] ?? '';
+
+    $errors = [];
+    if (!$userId) {
+        $errors[] = 'User ID is required.';
+    }
+
+    if (empty($oldPassword) || empty($newPassword) || empty($confirmPassword)) {
+        $errors[] = 'All fields are required.';
+    }
+
+    if ($newPassword !== $confirmPassword) {
+        $errors[] = 'Passwords do not match.';
+    }
+
+    $user = $userModel->findUserById($userId);
+
+    if (!$user) {
+        $errors[] = 'User not found.';
+    }
+
+    if (!password_verify($oldPassword, $user->getPasswordHash())) {
+        $errors[] = 'Old password is incorrect.';
+    }
+
+    if (!empty($errors)) {
+        $error_param = urlencode($errors[0]);
+        header("Location: ../views/ChangePasswordPage.php?error=$error_param");
+        exit;
+    }
+
+    $newPasswordHash = password_hash($newPassword, PASSWORD_DEFAULT);
+    $success = $userModel->changePassword($userId, $newPasswordHash);
+
+    if ($success) {
+        header('Location: ../index.php?success=password_updated');
+        exit;
+    } else {
+        header('Location: ../index.php?error=password_not_updated');
         exit;
     }
 }

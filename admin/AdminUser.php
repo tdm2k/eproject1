@@ -126,9 +126,9 @@ $users = $userModel->getAllUsers();
         </main>
 
         <!-- Footer -->
-        <div>
+        <footer class="mt-auto">
             <?php include('../admin/includes/AdminFooter.php'); ?>
-        </div>
+        </footer>
     </div>
 
 

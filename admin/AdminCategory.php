@@ -119,9 +119,9 @@ sort($categories);
         </main>
 
         <!-- Footer -->
-        <div>
+        <footer class="mt-auto">
             <?php include('../admin/includes/AdminFooter.php'); ?>
-        </div>
+        </footer>
     </div>
 
     <!-- Modal Add Category -->

@@ -108,11 +108,13 @@ if ($action === 'edit' && isset($_GET['id'])) {
         <?php endif; ?>
     </main>
 
-    <div>
-        <?php include('../admin/includes/AdminFooter.php'); ?>
+        <!-- Footer -->
+        <footer class="mt-auto">
+            <?php include('../admin/includes/AdminFooter.php'); ?>
+        </footer>
     </div>
-</div>
-<script src="../vendor/jquery/jquery.min.js"></script>
-<script src="../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <script src="../vendor/jquery/jquery.min.js"></script>
+    <script src="../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

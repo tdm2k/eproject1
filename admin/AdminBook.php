@@ -7,14 +7,31 @@ require_once '../controllers/BookController.php';
 
 $bookController = new BookController();
 
-
+$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 $response = $bookController->index();
-$books = $response['status'] === 'success' ? $response['data'] : [];
+$paginationData = $response['status'] === 'success' ? $response['data'] : null;
+$books = $paginationData ? $paginationData['books'] : [];
 $error_message = $response['status'] === 'error' ? $response['message'] : null;
 
 $error = $_GET['error'] ?? null;
 $status = $_GET['status'] ?? null;
 $message = $_GET['message'] ?? null;
+$errorMessages = [
+    'invalid-action' => 'Invalid action specified.',
+    'invalid-request-method' => 'Invalid request method.',
+    'empty-book-title' => 'Book title cannot be empty.',
+    'invalid-book-id' => 'Invalid book ID.',
+    'book-not-found' => 'Book not found.',
+    'failed-to-add' => 'Failed to add book.',
+    'failed-to-update' => 'Failed to update book.',
+    'failed-to-delete' => 'Failed to delete book.',
+    'error-loading-categories' => 'Error loading categories.'
+];
+$successMessages = [
+    'book-added' => 'Book added successfully!',
+    'book-updated' => 'Book updated successfully!',
+    'book-deleted' => 'Book deleted successfully!'
+];
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -25,6 +42,7 @@ $message = $_GET['message'] ?? null;
     <title>Space Dot Com | Admin - Books</title>
     <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="../assets/css/simple-notification.css">
     <style>
         .main-page-content {
             margin-left: 250px;
@@ -54,28 +72,28 @@ $message = $_GET['message'] ?? null;
                         </a>
                     </div>
 
-                    <?php if ($status === 'success' && $message): ?>
-                        <div class="alert alert-success" role="alert">
-                            <?php echo htmlspecialchars($message); ?>
+                    <?php
+
+                    if (isset($_GET['error']) && isset($errorMessages[$_GET['error']])): ?>
+                        <div class="alert alert-danger error-notification show" role="alert">
+                            <i class="bi bi-x-circle-fill me-2"></i>
+                            <?= $errorMessages[$_GET['error']] ?>
                         </div>
                     <?php endif; ?>
 
-                    <?php if ($error): ?>
-                        <div class="alert alert-danger" role="alert">
-                            <?php
-                            echo match ($error) {
-                                'invalid-action' => 'Invalid action specified.',
-                                'invalid-request-method' => 'Invalid request method.',
-                                'empty-book-title' => 'Book title cannot be empty.',
-                                'invalid-book-id' => 'Invalid book ID.',
-                                default => 'An error occurred.',
-                            };
-                            ?>
+                    <?php
+
+
+                    if (isset($_GET['success']) && isset($successMessages[$_GET['success']])): ?>
+                        <div class="alert alert-success success-notification show" role="alert">
+                            <i class="bi bi-check-circle-fill me-2"></i>
+                            <?= $successMessages[$_GET['success']] ?>
                         </div>
                     <?php endif; ?>
 
                     <?php if ($error_message): ?>
-                        <div class="alert alert-danger" role="alert">
+                        <div class="alert alert-danger error-notification show" role="alert">
+                            <i class="bi bi-x-circle-fill me-2"></i>
                             <?= htmlspecialchars($error_message) ?>
                         </div>
                     <?php endif; ?>
@@ -147,6 +165,43 @@ $message = $_GET['message'] ?? null;
                                     </tbody>
                                 </table>
                             </div>
+                            <nav aria-label="Page navigation" class="mt-4">
+                                <ul class="pagination justify-content-center">
+                                    <?php if ($paginationData['current_page'] > 1): ?>
+                                        <li class="page-item">
+                                            <a class="page-link" href="?page=<?php echo $paginationData['current_page'] - 1; ?>" aria-label="Previous">
+                                                <span aria-hidden="true">&laquo;</span>
+                                            </a>
+                                        </li>
+                                    <?php else: ?>
+                                        <li class="page-item disabled">
+                                            <span class="page-link" aria-label="Previous">
+                                                <span aria-hidden="true">&laquo;</span>
+                                            </span>
+                                        </li>
+                                    <?php endif; ?>
+
+                                    <?php for ($i = 1; $i <= $paginationData['total_pages']; $i++): ?>
+                                        <li class="page-item <?php echo $i === $paginationData['current_page'] ? 'active' : ''; ?>">
+                                            <a class="page-link" href="?page=<?php echo $i; ?>"><?php echo $i; ?></a>
+                                        </li>
+                                    <?php endfor; ?>
+
+                                    <?php if ($paginationData['current_page'] < $paginationData['total_pages']): ?>
+                                        <li class="page-item">
+                                            <a class="page-link" href="?page=<?php echo $paginationData['current_page'] + 1; ?>" aria-label="Next">
+                                                <span aria-hidden="true">&raquo;</span>
+                                            </a>
+                                        </li>
+                                    <?php else: ?>
+                                        <li class="page-item disabled">
+                                            <span class="page-link" aria-label="Next">
+                                                <span aria-hidden="true">&raquo;</span>
+                                            </span>
+                                        </li>
+                                    <?php endif; ?>
+                                </ul>
+                            </nav>
                         </div>
                     </div>
                 </div>
@@ -154,14 +209,15 @@ $message = $_GET['message'] ?? null;
         </main>
 
         <!-- Footer -->
-        <div>
+        <footer class="mt-auto">
             <?php include('../admin/includes/AdminFooter.php'); ?>
-        </div>
+        </footer>
     </div>
 
     <!-- Bootstrap -->
     <script src="../vendor/jquery/jquery.min.js"></script>
     <script src="../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="../assets/js/simple-notification.js"></script>
 </body>
 
 </html>

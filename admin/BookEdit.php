@@ -4,11 +4,9 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 
 require_once '../controllers/BookController.php';
-// require_once '../controllers/CategoryController.php';
 
 // Initialize controllers
 $bookController = new BookController();
-// $categoryController = new CategoryController();
 
 // Initialize variables
 $book = null;
@@ -18,9 +16,9 @@ $success = null;
 
 // Fetch categories
 try {
-    $categoryResponse = $categoryController->index();
-    if ($categoryResponse['status'] === 'success') {
-        $categories = $categoryResponse['data'];
+    $categoriesResponse = $bookController->getAllCategories();
+    if ($categoriesResponse['status'] === 'success') {
+        $categories = $categoriesResponse['data'];
     }
 } catch (Exception $e) {
     $error = "Error loading categories: " . $e->getMessage();
@@ -52,6 +50,7 @@ $pageTitle = $book ? 'Edit Book' : 'Add New Book';
     <title>Space Dot Com | Admin - <?php echo $pageTitle; ?></title>
     <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta3/dist/css/bootstrap-select.min.css">
     <style>
         .main-page-content {
             margin-left: 250px;
@@ -132,16 +131,20 @@ $pageTitle = $book ? 'Edit Book' : 'Add New Book';
 
                                 <div class="mb-3">
                                     <label for="categories" class="form-label">Categories</label>
-                                    <select class="form-select" id="categories" name="categories[]" multiple>
-                                        <?php foreach ($categories as $category): ?>
-                                            <option value="<?php echo $category->getId(); ?>"
-                                                <?php echo ($book && in_array($category->getId(), array_column($book->getCategories(), 'id'))) ? 'selected' : ''; ?>>
-                                                <?php echo htmlspecialchars($category->getName()); ?>
-                                            </option>
-                                        <?php endforeach; ?>
+                                    <select class="selectpicker form-control" id="categories" name="categories[]" multiple data-live-search="true" data-width="100%" title="Select categories">
+                                        <?php if (!empty($categories)): ?>
+                                            <?php foreach ($categories as $category): ?>
+                                                <option value="<?php echo htmlspecialchars($category['id']); ?>"
+                                                    <?php echo ($book && in_array($category['id'], array_column($book->getCategories(), 'id'))) ? 'selected' : ''; ?>>
+                                                    <?php echo htmlspecialchars($category['name']); ?>
+                                                </option>
+                                            <?php endforeach; ?>
+                                        <?php else: ?>
+                                            <option value="">No categories available</option>
+                                        <?php endif; ?>
                                     </select>
                                 </div>
-                               
+
                                 <div class="mb-3">
                                     <label for="image" class="form-label">Book Cover Image</label>
                                     <?php if ($book && $book->getImageUrl()): ?>
@@ -166,14 +169,45 @@ $pageTitle = $book ? 'Edit Book' : 'Add New Book';
         </main>
 
         <!-- Footer -->
-        <div>
+        <footer class="mt-auto">
             <?php include('../admin/includes/AdminFooter.php'); ?>
-        </div>
+        </footer>
     </div>
 
     <!-- Bootstrap -->
     <script src="../vendor/jquery/jquery.min.js"></script>
     <script src="../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta3/dist/js/bootstrap-select.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('.selectpicker').selectpicker({
+                noneSelectedText: 'Select categories',
+                noneResultsText: 'No categories found',
+                selectAllText: 'Select All',
+                deselectAllText: 'Deselect All',
+                liveSearchPlaceholder: 'Search categories...'
+            });
+        });
+
+        function previewImage(input) {
+            const preview = document.getElementById('imagePreview');
+            const container = document.getElementById('imagePreviewContainer');
+
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                    container.style.display = 'block';
+                }
+
+                reader.readAsDataURL(input.files[0]);
+            } else {
+                container.style.display = 'none';
+            }
+        }
+    </script>
+
 </body>
 
-</html> 
+</html>

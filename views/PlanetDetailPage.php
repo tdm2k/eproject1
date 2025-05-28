@@ -44,6 +44,7 @@ $message = $_GET['message'] ?? null;
     <title>Space Dot Com | Planet Details</title>
     <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
     <style>
         body {
             padding-top: 76px;
@@ -107,12 +108,12 @@ $message = $_GET['message'] ?? null;
     <?php include '../includes/Header.php'; ?>
 
     <!-- Section: Planet Header -->
-    <section class="bg-planet">
+    <section class="bg-planet" data-aos="zoom-in" data-aos-delay="100">
         <div class="container">
             <div class="row">
                 <div class="col-lg-8">
-                    <h1 class="display-4 fw-bold mb-4"><?php echo htmlspecialchars($planet ? $planet->getName() : 'Planet Details'); ?></h1>
-                    <p class="fs-5">Discover more about this fascinating celestial body</p>
+                    <h1 class="display-4 fw-bold mb-4" data-aos="fade-up" data-aos-delay="200"><?php echo htmlspecialchars($planet ? $planet->getName() : 'Planet Details'); ?></h1>
+                    <p class="fs-5" data-aos="fade-up" data-aos-delay="300">Discover more about this fascinating celestial body</p>
                 </div>
             </div>
         </div>
@@ -133,7 +134,7 @@ $message = $_GET['message'] ?? null;
                 </div>
             <?php elseif ($planet): ?>
                 <div class="container">
-                    <div class="row">
+                    <div class="row" data-aos="fade-up" data-aos-delay="100">
                         <div class="col-lg-7">
                             <h2 class="display-5 fw-bold"><?php echo html_entity_decode(htmlspecialchars($planet->getName())); ?> Facts</h2>
                             <p><?= html_entity_decode(htmlspecialchars($planet->getDescription())) ?></p>
@@ -211,7 +212,8 @@ $message = $_GET['message'] ?? null;
                             </div>
                         </div>
                     </div>
-                    <div class="row">
+                    <div class="row" data-aos="fade-up" data-aos-delay="100">
+                        <div class="mt-5" data-aos="zoom-in" data-aos-delay="100"> 
                         <?php if ($planet->getImage()): ?>
                             <img src="../<?php echo html_entity_decode(htmlspecialchars($planet->getImage())); ?>"
                                 alt="<?php echo html_entity_decode(htmlspecialchars($planet->getName())); ?>"
@@ -219,24 +221,25 @@ $message = $_GET['message'] ?? null;
                         <?php else: ?>
                             <img src="../assets/images/no-image.png" alt="No image" class="img-fluid rounded planet-img mb-4">
                         <?php endif; ?>
+                        </div>
 
-                        <div class="container">
-                            <div id="introducation" class="mb-5">
+                        <div class="container" data-aos="fade-up" data-aos-delay="100">
+                            <div id="introducation" class="mb-5" data-aos="fade-up" data-aos-delay="100">
                                 <h1>Introducation</h1>
                                 <p><?= html_entity_decode(htmlspecialchars($planet->getDescription())) ?></p>
                             </div>
 
-                            <div id="name-sake" class="mb-5">
+                            <div id="name-sake" class="mb-5" data-aos="fade-up" data-aos-delay="100">
                                 <h1>Namesake</h1>
                                 <p><?= html_entity_decode(htmlspecialchars($planet->getNameSake())) ?></p>
                             </div>
 
-                            <div id="size-distance" class="mb-5">
+                            <div id="size-distance" class="mb-5" data-aos="fade-up" data-aos-delay="100">
                                 <h1>Size & Distance</h1>
                                 <p><?= html_entity_decode(htmlspecialchars($planet->getSizeAndDistance())) ?></p>
                             </div>
 
-                            <div id="rings" class="mb-5">
+                            <div id="rings" class="mb-5" data-aos="fade-up" data-aos-delay="100">
                                 <h1>Rings</h1>
                                 <p>
                                     <?php
@@ -246,42 +249,42 @@ $message = $_GET['message'] ?? null;
                                 </p>
                             </div>
 
-                            <div id="moons" class="mb-5">
+                            <div id="moons" class="mb-5" data-aos="fade-up" data-aos-delay="100">
                                 <h1>Moons</h1>
                                 <p><?= html_entity_decode(htmlspecialchars($planet->getMoons() ?? 'N/A')) ?></p>
                             </div>
 
-                            <div id="structure" class="mb-5">
+                            <div id="structure" class="mb-5" data-aos="fade-up" data-aos-delay="100">
                                 <h1>Structure</h1>
                                 <p><?= html_entity_decode(htmlspecialchars($planet->getStructure() ?? 'N/A')) ?></p>
                             </div>
 
-                            <div id="surface" class="mb-5">
+                            <div id="surface" class="mb-5" data-aos="fade-up" data-aos-delay="100">
                                 <h1>Surface</h1>
                                 <p><?= html_entity_decode(htmlspecialchars($planet->getSurface() ?? 'N/A')) ?></p>
                             </div>
 
-                            <div id="atmosphere" class="mb-5">
+                            <div id="atmosphere" class="mb-5" data-aos="fade-up" data-aos-delay="100">
                                 <h1>Atmosphere</h1>
                                 <p><?= html_entity_decode(htmlspecialchars($planet->getAtmosphere() ?? 'N/A')) ?></p>
                             </div>
 
-                            <div id="magnetosphere" class="mb-5">
+                            <div id="magnetosphere" class="mb-5" data-aos="fade-up" data-aos-delay="100">
                                 <h1>Magnetosphere</h1>
                                 <p><?= html_entity_decode(htmlspecialchars($planet->getMagnetosphere() ?? 'N/A')) ?></p>
                             </div>
 
-                            <div id="orbit-rotation" class="mb-5">
+                            <div id="orbit-rotation" class="mb-5" data-aos="fade-up" data-aos-delay="100">
                                 <h1>Orbit & Rotation</h1>
                                 <p><?= html_entity_decode(htmlspecialchars($planet->getOrbitAndRotation() ?? 'N/A')) ?></p>
                             </div>
 
-                            <div id="formation" class="mb-5">
+                            <div id="formation" class="mb-5" data-aos="fade-up" data-aos-delay="100">
                                 <h1>Formation</h1>
                                 <p><?= html_entity_decode(htmlspecialchars($planet->getFormation() ?? 'N/A')) ?></p>
                             </div>
 
-                            <div id="potential-life" class="mb-5">
+                            <div id="potential-life" class="mb-5" data-aos="fade-up" data-aos-delay="100">
                                 <h1>Potential for Life</h1>
                                 <p><?= html_entity_decode(htmlspecialchars($planet->getPotentialForLife() ?? 'N/A')) ?></p>
                             </div>
@@ -303,6 +306,10 @@ $message = $_GET['message'] ?? null;
 
     <script src="../vendor/jquery/jquery.min.js"></script>
     <script src="../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+    <script>
+        AOS.init();
+    </script>
 </body>
 
 </html>

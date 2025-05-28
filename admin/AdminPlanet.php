@@ -5,14 +5,40 @@ if (session_status() === PHP_SESSION_NONE) {
 
 require_once '../controllers/PlanetController.php';
 $controller = new PlanetController();
+
+$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 $response = $controller->index();
-$planets = $response['status'] === 'success' ? $response['data'] : [];
+$paginationData = $response['status'] === 'success' ? $response['data'] : null;
+$planets = $paginationData ? $paginationData['planets'] : [];
 $error_message = $response['status'] === 'error' ? $response['message'] : null;
 
 // Thông báo từ query string
 $status = $_GET['status'] ?? null;
 $message = $_GET['message'] ?? null;
 $error = $_GET['error'] ?? null;
+$errorMessages = [
+    'invalid-action' => 'Invalid action specified.',
+    'invalid-request-method' => 'Invalid request method.',
+    'empty-planet-name' => 'Planet name cannot be empty.',
+    'invalid-planet-id' => 'Invalid planet ID.',
+    'invalid-file-type' => 'Invalid file type. Only JPG, PNG and GIF are allowed.',
+    'file-too-large' => 'File is too large. Maximum size is 5MB.',
+    'upload-failed' => 'Failed to upload file.',
+    'add-failed' => 'Failed to add planet.',
+    'update-failed' => 'Failed to update planet.',
+    'delete-failed' => 'Failed to delete planet.',
+    'restore-failed' => 'Failed to restore planet.',
+    'unknown-error' => 'An unknown error occurred.'
+];
+
+$successMessages = [
+    'planet-added' => 'Planet added successfully!',
+    'planet-updated' => 'Planet updated successfully!',
+    'planet-deleted' => 'Planet deleted successfully!',
+    'planet-restored' => 'Planet restored successfully!',
+    'planet-permanently-deleted' => 'Planet permanently deleted!'
+];
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -24,6 +50,7 @@ $error = $_GET['error'] ?? null;
     <!-- Bootstrap -->
     <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="../assets/css/simple-notification.css">
     <!-- CSS -->
     <style>
         .main-page-content {
@@ -99,29 +126,27 @@ $error = $_GET['error'] ?? null;
                     </div>
                 </div>
 
-                <!-- Thông báo -->
-                <?php if ($message): ?>
-                    <div class="alert <?= strpos($status, 'failed') === false ? 'alert-success' : 'alert-danger' ?>" role="alert">
-                        <?= htmlspecialchars($message) ?>
+                <?php
+
+                if (isset($_GET['error']) && isset($errorMessages[$_GET['error']])): ?>
+                    <div class="alert alert-danger error-notification show" role="alert">
+                        <i class="bi bi-x-circle-fill me-2"></i>
+                        <?= $errorMessages[$_GET['error']] ?>
                     </div>
                 <?php endif; ?>
 
-                <?php if ($error): ?>
-                    <div class="alert alert-danger" role="alert">
-                        <?php
-                        echo match ($error) {
-                            'invalid-action' => 'Invalid action specified.',
-                            'invalid-request-method' => 'Invalid request method.',
-                            'empty-planet-name' => 'Planet name cannot be empty.',
-                            'invalid-planet-id' => 'Invalid planet ID.',
-                            default => 'An error occurred.',
-                        };
-                        ?>
+                <?php
+                
+                if (isset($_GET['success']) && isset($successMessages[$_GET['success']])): ?>
+                    <div class="alert alert-success success-notification show" role="alert">
+                        <i class="bi bi-check-circle-fill me-2"></i>
+                        <?= $successMessages[$_GET['success']] ?>
                     </div>
                 <?php endif; ?>
 
                 <?php if ($error_message): ?>
-                    <div class="alert alert-danger" role="alert">
+                    <div class="alert alert-danger error-notification show" role="alert">
+                        <i class="bi bi-x-circle-fill me-2"></i>
                         <?= htmlspecialchars($error_message) ?>
                     </div>
                 <?php endif; ?>
@@ -180,18 +205,60 @@ $error = $_GET['error'] ?? null;
                         </tbody>
                     </table>
                 </div>
+
+                <!-- Phân trang -->
+                <?php if ($paginationData): ?>
+                    <nav aria-label="Page navigation" class="mt-4">
+                        <ul class="pagination justify-content-center">
+                            <?php if ($paginationData['current_page'] > 1): ?>
+                                <li class="page-item">
+                                    <a class="page-link" href="?page=<?php echo $paginationData['current_page'] - 1; ?>" aria-label="Previous">
+                                        <span aria-hidden="true">&laquo;</span>
+                                    </a>
+                                </li>
+                            <?php else: ?>
+                                <li class="page-item disabled">
+                                    <span class="page-link" aria-label="Previous">
+                                        <span aria-hidden="true">&laquo;</span>
+                                    </span>
+                                </li>
+                            <?php endif; ?>
+
+                            <?php for ($i = 1; $i <= $paginationData['total_pages']; $i++): ?>
+                                <li class="page-item <?php echo $i === $paginationData['current_page'] ? 'active' : ''; ?>">
+                                    <a class="page-link" href="?page=<?php echo $i; ?>"><?php echo $i; ?></a>
+                                </li>
+                            <?php endfor; ?>
+
+                            <?php if ($paginationData['current_page'] < $paginationData['total_pages']): ?>
+                                <li class="page-item">
+                                    <a class="page-link" href="?page=<?php echo $paginationData['current_page'] + 1; ?>" aria-label="Next">
+                                        <span aria-hidden="true">&raquo;</span>
+                                    </a>
+                                </li>
+                            <?php else: ?>
+                                <li class="page-item disabled">
+                                    <span class="page-link" aria-label="Next">
+                                        <span aria-hidden="true">&raquo;</span>
+                                    </span>
+                                </li>
+                            <?php endif; ?>
+                        </ul>
+                    </nav>
+                <?php endif; ?>
             </div>
         </main>
 
         <!-- Footer -->
-        <div>
+        <footer class="mt-auto">
             <?php include('../admin/includes/AdminFooter.php'); ?>
-        </div>
+        </footer>
     </div>
 
     <!-- Bootstrap -->
     <script src="../vendor/jquery/jquery.min.js"></script>
     <script src="../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="../assets/js/simple-notification.js"></script>
 </body>
 
 </html>

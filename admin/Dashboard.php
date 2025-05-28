@@ -26,18 +26,18 @@ if (session_status() === PHP_SESSION_NONE) {
 </head>
 
 <body>
-    <div class="main-page-content d-flex flex-column min-vh-100">
+    <div class="main-page-content d-flex flex-column min-vh-100 footer-wrapper">
         <!-- Sidebar -->
         <?php include '../admin/includes/AdminSidebar.php'; ?>
 
         <main class="flex-grow-1 p-4">
-            <p>Nội dung chính</p>
+            nội dung chính
         </main>
 
         <!-- Footer -->
-        <div>
+        <footer class="mt-auto">
             <?php include('../admin/includes/AdminFooter.php'); ?>
-        </div>
+        </footer>
     </div>
 
     <!-- Bootstrap -->

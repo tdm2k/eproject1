@@ -35,9 +35,9 @@ if (session_status() === PHP_SESSION_NONE) {
         </main>
 
         <!-- Footer -->
-        <div>
+        <footer class="mt-auto">
             <?php include('../admin/includes/AdminFooter.php'); ?>
-        </div>
+        </footer>
     </div>
 
 
