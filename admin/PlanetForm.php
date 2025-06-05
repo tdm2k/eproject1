@@ -204,7 +204,7 @@ try {
                         </select>
                     </div>
 
-                    <div class="d-grid gap-2">
+                    <div class="d-flex justify-content-between">
                         <button type="submit" class="btn btn-primary">Add Planet</button>
                     </div>
                 </form>

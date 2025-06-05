@@ -47,6 +47,7 @@ CREATE TABLE planets (
 CREATE TABLE constellations (
     id INT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(255),
+    image VARCHAR(255),  
     description TEXT,
     notable_stars TEXT,
     category_id INT,
