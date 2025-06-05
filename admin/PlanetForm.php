@@ -204,8 +204,7 @@ try {
                         </select>
                     </div>
 
-                    <div class="d-flex justify-content-between">
-                        <a href="AdminPage.php" class="btn btn-secondary">Back to List</a>
+                    <div class="d-grid gap-2">
                         <button type="submit" class="btn btn-primary">Add Planet</button>
                     </div>
                 </form>
