@@ -186,12 +186,12 @@ $successMessages = [
                                             <div class="btn-group">
                                                 <a href="PlanetEdit.php?id=<?php echo $planet->getId(); ?>"
                                                     class="btn btn-primary btn-sm me-2">
-                                                    <i class="fas fa-edit"></i> Edit
+                                                    <i class="bi bi-pencil"></i> Edit
                                                 </a>
                                                 <a href="../controllers/PlanetController.php?action=delete&id=<?php echo $planet->getId(); ?>"
                                                     class="btn btn-danger btn-sm"
                                                     onclick="return confirm('Are you sure you want to delete this planet?')">
-                                                    <i class="fas fa-trash"></i> Delete
+                                                     <i class="bi bi-trash"></i> Delete
                                                 </a>
                                             </div>
                                         </td>

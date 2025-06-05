@@ -10,6 +10,28 @@ require_once '../models/CategoryModel.php';
 $controller = new PlanetController();
 $planet = null;
 
+$errorMessages = [
+    'invalid-action' => 'Invalid action specified.',
+    'invalid-request-method' => 'Invalid request method.',
+    'empty-planet-name' => 'Planet name cannot be empty.',
+    'invalid-planet-id' => 'Invalid planet ID.',
+    'invalid-file-type' => 'Invalid file type. Only JPG, PNG and GIF are allowed.',
+    'file-too-large' => 'File is too large. Maximum size is 5MB.',
+    'upload-failed' => 'Failed to upload file.',
+    'add-failed' => 'Failed to add planet.',
+    'update-failed' => 'Failed to update planet.',
+    'delete-failed' => 'Failed to delete planet.',
+    'restore-failed' => 'Failed to restore planet.',
+    'unknown-error' => 'An unknown error occurred.'
+];
+$successMessages = [
+    'planet-added' => 'Planet added successfully!',
+    'planet-updated' => 'Planet updated successfully!',
+    'planet-deleted' => 'Planet deleted successfully!',
+    'planet-restored' => 'Planet restored successfully!',
+    'planet-permanently-deleted' => 'Planet permanently deleted!'
+];
+
 // Lấy thông tin hành tinh để edit
 if (isset($_GET['id'])) {
     $response = $controller->show((int)$_GET['id']);

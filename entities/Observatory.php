@@ -27,52 +27,67 @@ class Observatory
     {
         return $this->id;
     }
+
     public function getName(): ?string
     {
         return $this->name;
     }
+
     public function getLocation(): ?string
     {
         return $this->location;
     }
+
     public function getDescription(): ?string
     {
         return $this->description;
     }
+
     public function getImageUrl(): ?string
     {
         return $this->image_url;
     }
 
     // --- Setters ---
+    public function setId(?int $id): void
+    {
+        $this->id = $id;
+    }
+
     public function setName(?string $name): void
     {
         $this->name = $name;
     }
+
     public function setLocation(?string $location): void
     {
         $this->location = $location;
     }
+
     public function setDescription(?string $description): void
     {
         $this->description = $description;
     }
+
     public function setImageUrl(?string $image_url): void
     {
         $this->image_url = $image_url;
     }
 
-    // Phương thức load từ mảng
+    // --- Static Methods ---
     public static function fromArray(array $data): self
     {
-        $obj = new self(
+        $observatory = new self(
             $data['name'] ?? null,
             $data['location'] ?? null,
             $data['description'] ?? null,
             $data['image_url'] ?? null
         );
 
-        $obj->id = $data['id'] ?? null;
-        return $obj;
+        if (isset($data['id'])) {
+            $observatory->setId((int)$data['id']);
+        }
+
+        return $observatory;
     }
 }

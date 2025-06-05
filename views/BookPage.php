@@ -99,15 +99,44 @@ $secondColumnCategories = array_slice($categories, $categoriesPerColumn);
         .category-link:hover span {
             transform: translateY(3px);
         }
+
+        .bg-book {
+            position: relative;
+            background-image: url('../assets/images/background-books.jpg');
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center center;
+            min-height: 600px;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            color: white;
+            overflow: hidden;
+            z-index: 0;
+        }
     </style>
 </head>
 
 <body>
     <!-- Header -->
     <div>
-        <?php include('../includes/Header.php'); ?>
+        <?php include '../includes/Header.php'; ?>
     </div>
 
+    <section class="bg-book">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8">
+                    <h1 class="display-4 fw-bold mb-4" data-aos="fade-up" data-aos-delay="100">
+                        Explore the Universe Through Books
+                    </h1>
+                    <p class="fs-5 mb-5" data-aos="fade-up" data-aos-delay="200">
+                        Dive into a curated collection of astronomy books, from celestial basics to deep space mysteries.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
     <!-- Page Content -->
     <div class="container py-5">
         <?php if ($message): ?>
@@ -124,7 +153,7 @@ $secondColumnCategories = array_slice($categories, $categoriesPerColumn);
 
         <div class="row d-flex">
             <div class="col-lg-6">
-                <h1 class="display-4 mb-4 fw-bold">Books List</h1>
+                <h1 class="display-4 mb-4 fw-bold">Read the Stars, One Page at a Time</h1>
                 <p class="lead mb-5">Discover our collection of space-related books</p>
             </div>
             <div class="col-lg-6">
@@ -159,7 +188,7 @@ $secondColumnCategories = array_slice($categories, $categoriesPerColumn);
             </div>
         </div>
 
-        
+
 
         <?php if (empty($booksByCategory)): ?>
             <div class="alert alert-info">
@@ -176,17 +205,17 @@ $secondColumnCategories = array_slice($categories, $categoriesPerColumn);
                                     <?php if ($book->getImageUrl()): ?>
                                         <img src="../<?php echo htmlspecialchars($book->getImageUrl()); ?>"
                                             class="card-img-top book-cover"
-                                            alt="<?php echo htmlspecialchars($book->getTitle()); ?>">
+                                            alt="<?php echo nl2br(html_entity_decode($book->getTitle())); ?>">
                                     <?php else: ?>
                                         <img src="../assets/images/no-image.png"
                                             class="card-img-top book-cover"
                                             alt="No image">
                                     <?php endif; ?>
-                                    
+
                                     <div class="card-body">
-                                        <h5 class="card-title"><?php echo htmlspecialchars($book->getTitle()); ?></h5>
+                                        <h5 class="card-title"><?php echo nl2br(html_entity_decode($book->getTitle())); ?></h5>
                                         <p class="card-text text-muted fw-bold">By: <strong style="color: red;"><?php echo htmlspecialchars($book->getAuthor()); ?></strong></p>
-                                        
+
                                         <?php if (!empty($book->getCategories())): ?>
                                             <div class="mb-3">
                                                 <?php foreach ($book->getCategories() as $category): ?>
@@ -204,16 +233,16 @@ $secondColumnCategories = array_slice($categories, $categoriesPerColumn);
                                             ?>
                                         </p>
                                     </div>
-                                    
+
                                     <div class="card-footer bg-transparent border-top-0">
                                         <div class="d-flex justify-content-between align-items-center">
                                             <a href="BookDetailPage.php?id=<?php echo $book->getId(); ?>" class="btn btn-primary">
                                                 Read More
                                             </a>
                                             <?php if ($book->getBuyLink()): ?>
-                                                <a href="<?php echo htmlspecialchars($book->getBuyLink()); ?>" 
-                                                   class="btn btn-outline-primary" 
-                                                   target="_blank">
+                                                <a href="<?php echo htmlspecialchars($book->getBuyLink()); ?>"
+                                                    class="btn btn-outline-primary"
+                                                    target="_blank">
                                                     <i class="bi bi-cart"></i> Buy
                                                 </a>
                                             <?php endif; ?>
