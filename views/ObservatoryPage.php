@@ -35,7 +35,7 @@ $message = $_GET['message'] ?? null;
     <style>
         .bg-observatory {
             position: relative;
-            background-image: url('../assets/images/pexels-photo-447329.webp');
+            background-image: url('../assets/images/1200px-Lunette_mg_2368.jpg');
             background-repeat: no-repeat;
             background-size: cover;
             background-position: center center;
