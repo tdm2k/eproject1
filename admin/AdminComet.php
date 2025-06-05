@@ -33,11 +33,11 @@ if (session_status() === PHP_SESSION_NONE) {
         <main class="flex-grow-1 p-4">
             <p>Nội dung chính</p>
         </main>
+    </div>
 
-        <!-- Footer -->
-        <footer class="mt-auto">
-            <?php include('../admin/includes/AdminFooter.php'); ?>
-        </footer>
+    <!-- Footer -->
+    <div>
+        <?php include('../admin/includes/AdminFooter.php'); ?>
     </div>
 
     <!-- Bootstrap -->

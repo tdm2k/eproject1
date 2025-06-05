@@ -115,7 +115,7 @@ $successMessages = [
 
             <div class="container py-5">
                 <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h1 class="display-4">Planet Management</h1>
+                    <h1 class="display-4">Planets Management</h1>
                     <div>
                         <a href="PlanetForm.php" class="btn btn-primary">
                             <i class="bi bi-plus-circle"></i> Add New Planet
@@ -136,7 +136,7 @@ $successMessages = [
                 <?php endif; ?>
 
                 <?php
-                
+
                 if (isset($_GET['success']) && isset($successMessages[$_GET['success']])): ?>
                     <div class="alert alert-success success-notification show" role="alert">
                         <i class="bi bi-check-circle-fill me-2"></i>
@@ -153,7 +153,7 @@ $successMessages = [
 
                 <!-- Bảng dữ liệu -->
                 <div class="table-responsive">
-                    <table class="table table-striped table-hover">
+                    <table class="table table-striped">
                         <thead>
                             <tr>
                                 <th>ID</th>
@@ -186,12 +186,12 @@ $successMessages = [
                                             <div class="btn-group">
                                                 <a href="PlanetEdit.php?id=<?php echo $planet->getId(); ?>"
                                                     class="btn btn-primary btn-sm me-2">
-                                                    <i class="fas fa-edit"></i> Edit
+                                                    <i class="bi bi-pencil"></i> Edit
                                                 </a>
                                                 <a href="../controllers/PlanetController.php?action=delete&id=<?php echo $planet->getId(); ?>"
                                                     class="btn btn-danger btn-sm"
                                                     onclick="return confirm('Are you sure you want to delete this planet?')">
-                                                    <i class="fas fa-trash"></i> Delete
+                                                     <i class="bi bi-trash"></i> Delete
                                                 </a>
                                             </div>
                                         </td>
