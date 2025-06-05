@@ -205,7 +205,6 @@ try {
                     </div>
 
                     <div class="d-flex justify-content-between">
-                        <a href="AdminPage.php" class="btn btn-secondary">Back to List</a>
                         <button type="submit" class="btn btn-primary">Add Planet</button>
                     </div>
                 </form>
