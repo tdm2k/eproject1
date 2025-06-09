@@ -45,8 +45,7 @@ $successMessages = [
     <link rel="stylesheet" href="../assets/css/simple-notification.css">
     <style>
         .main-page-content {
-            margin-left: 250px;
-            padding: 20px;
+            margin-left: 280px;
         }
 
         .book-image {

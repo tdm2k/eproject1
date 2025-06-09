@@ -191,16 +191,7 @@ try {
                     <div class="mb-3">
                         <label for="category_id" class="form-label">Category</label>
                         <select class="form-control" id="category_id" name="category_id" required>
-                            <option value="">Select Category</option>
-                            <?php if (!empty($categories)): ?>
-                                <?php foreach ($categories as $category): ?>
-                                    <option value="<?php echo htmlspecialchars($category->getId()); ?>">
-                                        <?php echo htmlspecialchars($category->getName()); ?>
-                                    </option>
-                                <?php endforeach; ?>
-                            <?php else: ?>
-                                <option value="">No categories available</option>
-                            <?php endif; ?>
+                            <option value="1">Planet</option>
                         </select>
                     </div>
 
