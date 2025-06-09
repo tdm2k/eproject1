@@ -33,6 +33,10 @@ $message = $_GET['message'] ?? null;
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
     <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
     <style>
+        body {
+            padding-top: 76px;
+        }
+
         .bg-observatory {
             position: relative;
             background-image: url('../assets/images/pexels-photo-447329.webp');
@@ -152,7 +156,7 @@ $message = $_GET['message'] ?? null;
         <!-- Section: Introduction -->
         <section class="section">
             <div class="container">
-                <h2 class="display-4 fw-bold mb-4 text-warning mt-4" data-aos="fade-up">Introduction</h2>
+                <h2 class="display-4 fw-bold mb-4 text-dark mt-4" data-aos="fade-up">Introduction</h2>
                 <div class="mb-4 fs-5" data-aos="fade-up" data-aos-delay="100">
                     <p class="mb-3">
                         Astronomical observatories are facilities equipped with powerful telescopes and instruments designed to observe celestial objects and phenomena. These observatories play a crucial role in advancing our understanding of the universe, from studying distant galaxies to monitoring our own solar system.
@@ -181,7 +185,7 @@ $message = $_GET['message'] ?? null;
                                 <div class="layer"></div>
                                 <div class="info">
                                     <h1 style="color: white; text-shadow: 2px 2px 4px rgba(0,0,0,0.7);">
-                                    <?= htmlspecialchars($observatory->getName()) ?>
+                                        <?= htmlspecialchars($observatory->getName()) ?>
                                     </h1>
                                     <p>
                                         <?php

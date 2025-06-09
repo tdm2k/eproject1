@@ -58,9 +58,10 @@ CREATE TABLE comets (
     id INT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(255),
     features TEXT,
-    last_observed DATE,
+    last_observed VARCHAR(255),
     orbital_period_years FLOAT,
     description TEXT,
+    image VARCHAR(255),
     category_id INT,
     FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE SET NULL ON UPDATE CASCADE
 );

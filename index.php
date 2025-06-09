@@ -30,20 +30,22 @@ if (session_status() === PHP_SESSION_NONE) {
         <?php include('includes/Header.php'); ?>
     </div>
 
-    <div class="position-relative" style="height: 100vh;" data-aos="zoom-in" data-aos-delay="100">
-        <img src="../assets/images/background-home.jpg" class="w-100 h-100 position-absolute top-0 start-0" style="object-fit: cover; z-index: 1;" alt="Background">
+    <section class="section">
+        <div class="position-relative" style="height: 100vh;" data-aos="zoom-in" data-aos-delay="100">
+            <img src="../assets/images/background-home.jpg" class="w-100 h-100 position-absolute top-0 start-0" style="object-fit: cover; z-index: 1;" alt="Background">
 
-        <div class="position-absolute top-0 start-0 w-100 h-100 bg-dark bg-opacity-50" style="z-index: 2;"></div>
+            <div class="position-absolute top-0 start-0 w-100 h-100 bg-dark bg-opacity-50" style="z-index: 2;"></div>
 
-        <div class="position-absolute start-0 w-100 text-white px-5" style="top: 30%; z-index: 3;">
-            <h1 class="display-4 fw-bold">Welcome to the Universe!</h1>
-            <p class="lead" style="margin-bottom: 200px;">Embark on a journey through the mysteries and wonders of space.</p>
-            <p>From the birth of stars to the deepest black holes, our universe is a canvas of breathtaking phenomena
-                <br>waiting to be explored. Discover the latest cosmic events, delve into groundbreaking scientific theorie and
-                <br> marvel at stunning celestial photography. Join us as we unravel the secrets of the unknown cosmos.
-            </p>
+            <div class="position-absolute start-0 w-100 text-white px-5" style="top: 30%; z-index: 3;">
+                <h1 class="display-4 fw-bold">Welcome to the Universe!</h1>
+                <p class="lead" style="margin-bottom: 200px;">Embark on a journey through the mysteries and wonders of space.</p>
+                <p>From the birth of stars to the deepest black holes, our universe is a canvas of breathtaking phenomena
+                    <br>waiting to be explored. Discover the latest cosmic events, delve into groundbreaking scientific theorie and
+                    <br> marvel at stunning celestial photography. Join us as we unravel the secrets of the unknown cosmos.
+                </p>
+            </div>
         </div>
-    </div>
+    </section>
 
     <!-- Page Content -->
     <div class="container">
@@ -130,7 +132,7 @@ if (session_status() === PHP_SESSION_NONE) {
         </div>
     </div>
 
-    <div id="quoteCarousel" class="carousel slide my-5" data-bs-ride="carousel">
+    <div id="quoteCarousel" class="carousel slide my-5" data-bs-ride="carousel" data-aos="fade-up" data-aos-delay="100">
         <div class="carousel-inner text-center bg-dark text-white rounded shadow p-4">
 
             <!-- Slide 1 -->
@@ -214,6 +216,15 @@ if (session_status() === PHP_SESSION_NONE) {
             <span class="carousel-control-next-icon bg-dark rounded-circle"></span>
             <span class="visually-hidden">Next</span>
         </button>
+    </div>
+
+    <div class="container">
+        <h2 class="display-5 fw-bold mb-4 text-dark" data-aos="fade-up" data-aos-delay="100">So, what exactly is space?</h2>
+        <div class="mb-4 fs-5" data-aos="fade-up" data-aos-delay="200">
+            <p class="fs-5 mb-3">
+                Space is the vast realm beyond Earth’s atmosphere that holds all of existence: from galaxies and stars to dust and radiation. There’s still so much we don’t know about Earth, but that hasn’t stopped our exploration of what lies beyond our planet. Space is not empty – it is filled with cosmic phenomena and objects and stretches on beyond our observational capabilities. Our solar system is full of information about our potential origins as well as the origins of the universe, and organizations like NASA continue to look for answers to some of our most basic questions. With the International Space Station fostering worldwide cooperation, learning about space not only opens up potential career opportunities but is also the perfect way to pursue knowledge for its own sake. Whether you’re following the colonization of Mars or the search for exoplanets that may support life, learning about our surroundings is a fascinating pastime. And with enough knowledge, you may one day hold the key to building the starships we’ve dreamed about since we first looked up to the stars.
+            </p>
+        </div>
     </div>
 
     <!-- Media Section: Videos | Articles | Books -->
