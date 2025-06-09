@@ -1,131 +1,140 @@
 <?php
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
-
     if ($_SESSION['user_role'] !== 'admin') {
         header('Location: ../index.php');
-        exit();
+        exit;
     }
 }
 
-require_once __DIR__ . '/../connection.php';
-require_once __DIR__ . '/../controllers/ConstellationController.php';
+require_once '../controllers/ConstellationController.php';
+require_once '../models/ConstellationModel.php';
 
-// Khởi tạo kết nối
-$connObj = new Connection();
-$conn = $connObj->getConnection();
+$model = new ConstellationModel();
+$controller = new ConstellationController($model);
+$action = $_GET['action'] ?? null;
 
-$controller = new ConstellationController($conn);
-$controller->handleAdminRequest();
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $controller->handleRequest($action, $_POST);
+    exit;
+} elseif ($action === 'delete' && isset($_GET['id'])) {
+    $controller->handleRequest('delete', ['id' => $_GET['id']]);
+    exit;
+}
+
 $constellations = $controller->getAllConstellations();
+$constellation = null;
+if ($action === 'edit' && isset($_GET['id'])) {
+    $constellation = $controller->getConstellationById($_GET['id']);
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Space Dot Com | Admin</title>
-    <!-- Bootstrap -->
-    <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
-    <link
-        rel="stylesheet"
-        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
-    />
-    <style>
-        .main-page-content {
-            margin-left: 280px;
-        }
-    </style>
+    <meta charset="UTF-8">
+    <title>Constellation Management</title>
+    <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>.main-page-content { margin-left: 280px; }</style>
 </head>
-
 <body>
-    <div class="main-page-content d-flex flex-column min-vh-100">
-        <!-- Sidebar -->
-        <?php include '../admin/includes/AdminSidebar.php'; ?>
+<div class="main-page-content d-flex flex-column min-vh-100">
+    <?php include '../admin/includes/AdminSidebar.php'; ?>
 
-        <main class="flex-grow-1 p-4">
-            <h2>Trang quản trị chòm sao</h2>
+    <main class="flex-grow-1 p-4">
+        <h2>Manage Constellations</h2>
 
-            <!-- Form Thêm mới -->
-            <form method="post" class="mb-4">
-                <input
-                    class="form-control mb-2"
-                    type="text"
-                    name="name"
-                    placeholder="Tên chòm sao"
-                    required
-                />
-                <textarea
-                    class="form-control mb-2"
-                    name="description"
-                    placeholder="Mô tả"
-                    required
-                ></textarea>
-                <button class="btn btn-primary" type="submit" name="add">Thêm</button>
+        <?php if ($action === 'add' || $action === 'edit'): ?>
+            <a href="AdminConstellation.php" class="btn btn-secondary mb-3"><i class="bi bi-arrow-left"></i> Back to List</a>
+            <form method="POST">
+                <?php if ($action === 'edit'): ?>
+                    <input type="hidden" name="id" value="<?= htmlspecialchars($constellation['id']) ?>">
+                <?php endif; ?>
+                <div class="mb-3">
+                    <label class="form-label">Constellation Name</label>
+                    <input type="text" name="name" class="form-control" required value="<?= htmlspecialchars($constellation['name'] ?? '') ?>">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Image (URL)</label>
+                    <input type="text" name="image" class="form-control" value="<?= htmlspecialchars($constellation['image'] ?? '') ?>">
+                    <?php if (!empty($constellation['image'])): ?>
+                        <img src="<?= htmlspecialchars($constellation['image']) ?>" class="mt-2" width="150">
+                    <?php endif; ?>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Description</label>
+                    <textarea name="description" class="form-control" rows="3"><?= htmlspecialchars($constellation['description'] ?? '') ?></textarea>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Notable Stars</label>
+                    <input type="text" name="notable_stars" class="form-control" value="<?= htmlspecialchars($constellation['notable_stars'] ?? '') ?>">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Category</label>
+                    <select id="category_id" name="category_id">
+                        <option value="2">Constellation</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Coordinates (e.g., RA: 14h 15m, Dec: -60°)</label>
+                    <input type="text" name="position" class="form-control" value="<?= htmlspecialchars($constellation['position'] ?? '') ?>">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Legend</label>
+                    <textarea name="legend" class="form-control" rows="4"><?= htmlspecialchars($constellation['legend'] ?? '') ?></textarea>
+                </div>
+                <button type="submit" class="btn btn-success">
+                    <i class="bi bi-save"></i> <?= $action === 'edit' ? 'Update' : 'Add New' ?>
+                </button>
             </form>
-
-            <h3>Danh sách</h3>
-            <table class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Tên</th>
-                        <th>Mô tả</th>
-                        <th>Hành động</th>
-                    </tr>
+        <?php else: ?>
+            <a href="AdminConstellation.php?action=add" class="btn btn-primary mb-3"><i class="bi bi-plus-circle"></i> Add Constellation</a>
+            <table class="table table-bordered table-hover">
+                <thead class="table-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Image</th>
+                    <th>Description</th>
+                    <th>Notable Stars</th>
+                    <th>Category</th>
+                    <th>Coordinates</th>
+                    <th>Legend</th>
+                    <th>Actions</th>
+                </tr>
                 </thead>
                 <tbody>
-                    <?php foreach ($constellations as $c): ?>
-                        <tr>
-                            <form method="post">
-                                <td>
-                                    <?= $c->getId() ?>
-                                    <input type="hidden" name="id" value="<?= $c->getId() ?>" />
-                                </td>
-                                <td>
-                                    <input
-                                        class="form-control"
-                                        type="text"
-                                        name="name"
-                                        value="<?= htmlspecialchars($c->getName()) ?>"
-                                        required
-                                    />
-                                </td>
-                                <td>
-                                    <textarea
-                                        class="form-control"
-                                        name="description"
-                                        required
-                                    ><?= htmlspecialchars($c->getDescription()) ?></textarea>
-                                </td>
-                                <td>
-                                    <button class="btn btn-warning btn-sm" type="submit" name="update">Sửa</button>
-                                    <button
-                                        class="btn btn-danger btn-sm"
-                                        type="submit"
-                                        name="delete"
-                                        onclick="return confirm('Xóa?')"
-                                    >
-                                        Xóa
-                                    </button>
-                                </td>
-                            </form>
-                        </tr>
-                    <?php endforeach; ?>
+                <?php foreach ($constellations as $c): ?>
+                    <tr>
+                        <td><?= $c['id'] ?></td>
+                        <td><?= htmlspecialchars($c['name']) ?></td>
+                        <td>
+                            <?php if (!empty($c['image'])): ?>
+                                <img src="<?= htmlspecialchars($c['image']) ?>" width="60">
+                            <?php endif; ?>
+                        </td>
+                        <td><?= nl2br(htmlspecialchars($c['description'])) ?></td>
+                        <td><?= htmlspecialchars($c['notable_stars']) ?></td>
+                        <td><?= htmlspecialchars($c['category_id']) ?></td>
+                        <td><?= htmlspecialchars($c['position']) ?></td>
+                        <td><?= nl2br(htmlspecialchars($c['legend'])) ?></td>
+                        <td>
+                            <a href="?action=edit&id=<?= $c['id'] ?>" class="btn btn-sm btn-warning"><i class="bi bi-pencil-square"></i> Edit</a>
+                            <a href="?action=delete&id=<?= $c['id'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this?');"><i class="bi bi-trash"></i> Delete</a>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
                 </tbody>
             </table>
-        </main>
+        <?php endif; ?>
+    </main>
 
-        <!-- Footer -->
-        <footer class="mt-auto">
-            <?php include('../admin/includes/AdminFooter.php'); ?>
-        </footer>
-    </div>
+    <footer class="mt-auto">
+        <?php include('../admin/includes/AdminFooter.php'); ?>
+    </footer>
+</div>
 
-    <!-- Bootstrap -->
-    <script src="../vendor/jquery/jquery.min.js"></script>
-    <script src="../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="../vendor/jquery/jquery.min.js"></script>
+<script src="../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 </body>
-
 </html>

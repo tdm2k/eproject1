@@ -30,7 +30,7 @@ if ($action === 'edit' && isset($_GET['id'])) {
 }
 ?>
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Space Dot Com | Admin</title>
@@ -43,33 +43,36 @@ if ($action === 'edit' && isset($_GET['id'])) {
     <?php include '../admin/includes/AdminSidebar.php'; ?>
 
     <main class="flex-grow-1 p-4">
-        <h2>Quản lý bài viết</h2>
+        <h2>Article Management</h2>
 
         <?php if ($action === 'add' || $action === 'edit'): ?>
-            <a href="AdminArticle.php" class="btn btn-secondary mb-3"><i class="bi bi-arrow-left"></i> Quay lại danh sách</a>
+            <a href="AdminArticle.php" class="btn btn-secondary mb-3"><i class="bi bi-arrow-left"></i> Back to List</a>
             <form method="POST">
+                <?php if ($action === 'edit' && isset($_GET['id'])): ?>
+                    <input type="hidden" name="id" value="<?= htmlspecialchars($_GET['id']) ?>">
+                <?php endif; ?>
                 <div class="mb-3">
-                    <label for="title" class="form-label">Tiêu đề</label>
+                    <label for="title" class="form-label">Title</label>
                     <input type="text" name="title" id="title" class="form-control" value="<?= htmlspecialchars($article['title'] ?? '') ?>" required>
                 </div>
                 <div class="mb-3">
-                    <label for="content" class="form-label">Nội dung</label>
+                    <label for="content" class="form-label">Content</label>
                     <textarea name="content" id="content" class="form-control" rows="6" required><?= htmlspecialchars($article['content'] ?? '') ?></textarea>
                 </div>
                 <div class="mb-3">
-                    <label for="image_url" class="form-label">Đường dẫn ảnh minh họa</label>
-                    <input type="text" name="image_url" id="image_url" class="form-control" placeholder="Ví dụ: https://example.com/image.jpg hoặc images/photo.jpg" value="<?= htmlspecialchars($article['image_url'] ?? '') ?>">
+                    <label for="image_url" class="form-label">Image URL</label>
+                    <input type="text" name="image_url" id="image_url" class="form-control" placeholder="Example: https://example.com/image.jpg or images/photo.jpg" value="<?= htmlspecialchars($article['image_url'] ?? '') ?>">
                     <?php if (!empty($article['image_url'])): ?>
                         <img src="<?= htmlspecialchars($article['image_url']) ?>" class="mt-2" width="150">
                     <?php endif; ?>
                 </div>
-                <button type="submit" class="btn btn-success"><i class="bi bi-save"></i> Lưu bài viết</button>
+                <button type="submit" class="btn btn-success"><i class="bi bi-save"></i> Save Article</button>
             </form>
         <?php else: ?>
-            <a href="AdminArticle.php?action=add" class="btn btn-primary mb-3"><i class="bi bi-plus-circle"></i> Thêm bài viết</a>
+            <a href="AdminArticle.php?action=add" class="btn btn-primary mb-3"><i class="bi bi-plus-circle"></i> Add Article</a>
             <table class="table table-bordered table-hover">
                 <thead class="table-dark">
-                <tr><th>ID</th><th>Tiêu đề</th><th>Hình ảnh</th><th>Hành động</th></tr>
+                <tr><th>ID</th><th>Title</th><th>Image</th><th>Actions</th></tr>
                 </thead>
                 <tbody>
                 <?php foreach ($articles as $article): ?>
@@ -82,8 +85,8 @@ if ($action === 'edit' && isset($_GET['id'])) {
                             <?php endif; ?>
                         </td>
                         <td>
-                            <a href="AdminArticle.php?action=edit&id=<?= $article['id'] ?>" class="btn btn-sm btn-warning"><i class="bi bi-pencil-square"></i> Sửa</a>
-                            <a href="AdminArticle.php?action=delete&id=<?= $article['id'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('Bạn có chắc muốn xoá?');"><i class="bi bi-trash"></i> Xoá</a>
+                            <a href="AdminArticle.php?action=edit&id=<?= $article['id'] ?>" class="btn btn-sm btn-warning"><i class="bi bi-pencil-square"></i> Edit</a>
+                            <a href="AdminArticle.php?action=delete&id=<?= $article['id'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete?');"><i class="bi bi-trash"></i> Delete</a>
                         </td>
                     </tr>
                 <?php endforeach; ?>

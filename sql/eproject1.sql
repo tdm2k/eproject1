@@ -51,8 +51,10 @@ CREATE TABLE constellations (
     description TEXT,
     notable_stars TEXT,
     category_id INT,
+    position VARCHAR(255),
     FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE SET NULL ON UPDATE CASCADE
 );
+
 
 -- ========== ☄️ SAO CHỔI ==========
 CREATE TABLE comets (
