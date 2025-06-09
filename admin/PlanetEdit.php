@@ -85,20 +85,6 @@ try {
                 </div>
 
                 <?php
-                $errorMessages = [
-                    'invalid-action' => 'Invalid action specified.',
-                    'invalid-request-method' => 'Invalid request method.',
-                    'empty-planet-name' => 'Planet name cannot be empty.',
-                    'invalid-planet-id' => 'Invalid planet ID.',
-                    'invalid-file-type' => 'Invalid file type. Only JPG, PNG and GIF are allowed.',
-                    'file-too-large' => 'File is too large. Maximum size is 5MB.',
-                    'upload-failed' => 'Failed to upload file.',
-                    'add-failed' => 'Failed to add planet.',
-                    'update-failed' => 'Failed to update planet.',
-                    'delete-failed' => 'Failed to delete planet.',
-                    'restore-failed' => 'Failed to restore planet.',
-                    'unknown-error' => 'An unknown error occurred.'
-                ];
 
                 if (isset($_GET['error']) && isset($errorMessages[$_GET['error']])): ?>
                     <div class="alert alert-danger error-notification show" role="alert">
@@ -108,13 +94,6 @@ try {
                 <?php endif; ?>
 
                 <?php
-                $successMessages = [
-                    'planet-added' => 'Planet added successfully!',
-                    'planet-updated' => 'Planet updated successfully!',
-                    'planet-deleted' => 'Planet deleted successfully!',
-                    'planet-restored' => 'Planet restored successfully!',
-                    'planet-permanently-deleted' => 'Planet permanently deleted!'
-                ];
 
                 if (isset($_GET['success']) && isset($successMessages[$_GET['success']])): ?>
                     <div class="alert alert-success success-notification show" role="alert">
@@ -213,17 +192,7 @@ try {
                     <div class="mb-3">
                         <label for="category_id" class="form-label">Category</label>
                         <select class="form-control" id="category_id" name="category_id" required>
-                            <option value="">Select Category</option>
-                            <?php if (!empty($categories)): ?>
-                                <?php foreach ($categories as $category): ?>
-                                    <option value="<?php echo htmlspecialchars($category->getId()); ?>"
-                                        <?php echo $planet->getCategoryId() == $category->getId() ? 'selected' : ''; ?>>
-                                        <?php echo htmlspecialchars($category->getName()); ?>
-                                    </option>
-                                <?php endforeach; ?>
-                            <?php else: ?>
-                                <option value="">No categories available</option>
-                            <?php endif; ?>
+                            <option value="1">Planet</option>
                         </select>
                     </div>
 

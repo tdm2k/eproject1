@@ -81,7 +81,6 @@ error_log("Observatories data: " . print_r($observatories, true));
     <style>
         .main-page-content {
             margin-left: 280px;
-            padding: 20px;
         }
 
         .table-image {
