@@ -1,63 +1,208 @@
-<main class="container">
-    <!-- Tiêu đề chính -->
-    <section class="page-header">
-        <h1><i class="bi bi-people-fill"></i> About Us</h1>
-        <p class="page-description">
-            Space Dot Com is a community of dreamers, scientists, and space lovers dedicated to unlocking the mysteries of the universe for everyone.
-        </p>
-    </section>
+<?php
+session_start();
+$currentPageName = strtolower(basename($_SERVER['SCRIPT_NAME'], '.php'));
+$hideSearchOnPages = ['loginpage', 'registerpage', 'changepasswordpage', 'resetpasswordpage', 'userprofilepage'];
+$showSearchBar = !in_array($currentPageName, $hideSearchOnPages);
+?>
+<!DOCTYPE html>
+<html lang="en">
 
-    <!-- Giới thiệu tổng quan -->
-    <section class="row align-items-center g-4">
-        <div class="col-lg-6">
-            <img src="/assets/images/team-space.jpg" alt="Our Team" class="img-fluid rounded shadow" />
-        </div>
-        <div class="col-lg-6">
-            <h3 class="text-warning fw-bold mb-3">Who We Are</h3>
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Space Project - Team 5</title>
+
+    <!-- Bootstrap & Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Particles.js -->
+    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            background-color: #0d1b2a;
+            color: #e0e1dd;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        #particles-js {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: -1;
+        }
+
+        header {
+            text-align: center;
+            padding: 60px 20px 20px;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            font-size: 1.2rem;
+            color: #a9bcd0;
+        }
+
+        .project-description {
+            text-align: center;
+            padding: 20px;
+            max-width: 800px;
+            margin: auto;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: #d9e2ec;
+        }
+
+        .team-section {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px;
+            padding: 40px 20px;
+        }
+
+        .member-card {
+            background-color: rgba(30, 58, 95, 0.85);
+            border-radius: 15px;
+            padding: 20px;
+            width: 250px;
+            text-align: center;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+            transition: transform 0.3s;
+        }
+
+        .member-card:hover {
+            transform: scale(1.05);
+        }
+
+        .member-card img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 15px;
+            border: 2px solid #fff;
+        }
+
+        .footer {
+            flex-shrink: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Particles background -->
+    <div id="particles-js"></div>
+
+    <?php include '../includes/Header.php'; ?>
+
+    <!-- Main Content -->
+    <main class="flex-grow-1 pt-5 mt-5">
+        <header>
+            <h1>Team 4: Universe Exploration Project</h1>
+            <p>Discovering the Beauty of the Stars - A Collaboration of Passionate Developers</p>
+        </header>
+
+        <section class="project-description">
             <p>
-                We are a passionate collective driven by curiosity and a shared love for the cosmos. At <strong>Space Dot Com</strong>, we believe that space should be for everyone — not just scientists and astronomers.
+                Our project is centered around visualizing and sharing knowledge about constellations in the universe. Users can explore well-known constellations such as Orion, Ursa Major, and more, while learning interesting facts and stories behind each celestial formation.
             </p>
-            <p>
-                From daily celestial updates to deep-dive articles on astrophysics, we make space exploration understandable, inspiring, and accessible.
-            </p>
-            <ul class="list-unstyled">
-                <li><i class="bi bi-check-circle-fill text-success me-2"></i> Founded by space enthusiasts, for the curious minds.</li>
-                <li><i class="bi bi-lightbulb-fill text-warning me-2"></i> Promoting education through visual and interactive content.</li>
-                <li><i class="bi bi-heart-fill text-danger me-2"></i> Committed to growing a vibrant space-loving community.</li>
-            </ul>
-        </div>
-    </section>
+        </section>
 
-    <!-- Tầm nhìn và sứ mệnh -->
-    <section class="row mt-5 text-center">
-        <div class="col-md-6 mb-4">
-            <div class="p-4 bg-dark rounded shadow">
-                <i class="bi bi-eye-fill fs-1 text-info"></i>
-                <h4 class="text-light mt-3">Our Vision</h4>
-                <p class="text-muted">
-                    To be the leading platform that inspires people of all ages to look up and explore what lies beyond Earth.
-                </p>
-            </div>
-        </div>
-        <div class="col-md-6 mb-4">
-            <div class="p-4 bg-dark rounded shadow">
-                <i class="bi bi-compass-fill fs-1 text-warning"></i>
-                <h4 class="text-light mt-3">Our Mission</h4>
-                <p class="text-muted">
-                    To connect the world with the cosmos through education, community, and the wonder of discovery.
-                </p>
-            </div>
-        </div>
-    </section>
+        <section class="team-section">
+            <?php
+            $members = [
+                ["img" => 1, "name" => "Đỗ Trung Hiếu", "role" => "Team Leader"],
+                ["img" => 2, "name" => "Trần Đăng Minh", "role" => ""],
+                ["img" => 3, "name" => "Đặng Quang Kỳ", "role" => ""],
+                ["img" => 4, "name" => "Nguyễn Tiến Huy", "role" => ""],
+                ["img" => 5, "name" => "Nguyễn Tất Đạt", "role" => ""]
+            ];
+            foreach ($members as $m): ?>
+                <div class="member-card">
+                    <img src="https://i.pravatar.cc/150?img=<?= $m['img'] ?>" alt="<?= $m['name'] ?>">
+                    <h3><?= $m['name'] ?></h3>
+                    <p><?= $m['role'] ?></p>
+                </div>
+            <?php endforeach; ?>
+        </section>
+    </main>
 
-    <!-- Kết luận -->
-    <section class="mt-5 text-center">
-        <h4 class="text-light mb-3">Join Our Journey</h4>
-        <p class="text-muted mx-auto" style="max-width: 700px;">
-            Whether you're a space nerd, a stargazer, or simply curious about what’s out there — welcome aboard. Together, let’s explore the stars.
-        </p>
-        <a href="/join-us.php" class="btn btn-warning mt-3">
-            <i class="bi bi-person-plus-fill me-1"></i> Become a Member
-        </a>
-    </section>
-</main>
+    <!-- Footer -->
+    <div class="footer">
+        <?php include '../includes/Footer.php'; ?>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        particlesJS("particles-js", {
+            particles: {
+                number: {
+                    value: 100
+                },
+                color: {
+                    value: "#ffffff"
+                },
+                shape: {
+                    type: "circle"
+                },
+                opacity: {
+                    value: 0.5
+                },
+                size: {
+                    value: 2
+                },
+                line_linked: {
+                    enable: true,
+                    distance: 120,
+                    color: "#ffffff",
+                    opacity: 0.3,
+                    width: 1
+                },
+                move: {
+                    enable: true,
+                    speed: 0.8
+                }
+            },
+            interactivity: {
+                events: {
+                    onhover: {
+                        enable: true,
+                        mode: "repulse"
+                    }
+                }
+            },
+            retina_detect: true
+        });
+
+        function updateLiveClock() {
+            const clockElement = document.getElementById('live-clock');
+            if (clockElement) {
+                const now = new Date();
+                clockElement.textContent = now.toLocaleString('en-US', {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit',
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric'
+                });
+            }
+        }
+        updateLiveClock();
+        setInterval(updateLiveClock, 1000);
+    </script>
+</body>
+
+</html>
