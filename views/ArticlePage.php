@@ -1,7 +1,15 @@
 <?php
 require_once __DIR__ . '/../models/ArticleModel.php';
 $model = new ArticleModel();
-$articles = $model->getAllArticles();
+
+// Cấu hình phân trang
+$limit = 5;
+$page = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
+$offset = ($page - 1) * $limit;
+
+$articles = $model->getAllArticlesPaginated($limit, $offset);
+$totalArticles = $model->getTotalArticles();
+$totalPages = ceil($totalArticles / $limit);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -106,6 +114,32 @@ $articles = $model->getAllArticles();
             <?php else: ?>
                 <p class="text-muted text-center">No articles available.</p>
             <?php endif; ?>
+
+            <!-- Pagination -->
+            <?php if ($totalPages > 1): ?>
+                <nav aria-label="Page navigation">
+                    <ul class="pagination justify-content-center mt-4">
+                        <?php if ($page > 1): ?>
+                            <li class="page-item">
+                                <a class="page-link" href="?page=<?= $page - 1 ?>"><i class="bi bi-chevron-left"></i></a>
+                            </li>
+                        <?php endif; ?>
+
+                        <?php for ($i = 1; $i <= $totalPages; $i++): ?>
+                            <li class="page-item <?= $i == $page ? 'active' : '' ?>">
+                                <a class="page-link" href="?page=<?= $i ?>"><?= $i ?></a>
+                            </li>
+                        <?php endfor; ?>
+
+                        <?php if ($page < $totalPages): ?>
+                            <li class="page-item">
+                                <a class="page-link" href="?page=<?= $page + 1 ?>"><i class="bi bi-chevron-right"></i></a>
+                            </li>
+                        <?php endif; ?>
+                    </ul>
+                </nav>
+            <?php endif; ?>
+
         </div>
     </section>
 </main>
