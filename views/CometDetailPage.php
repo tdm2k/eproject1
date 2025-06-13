@@ -96,6 +96,65 @@ $comet = $cometModel->getCometById($id);
         </div>
     </section>
 
+    <!-- Section: Comet Details -->
+    <section class="section">
+        <div class="container">
+            <?php if ($comet): ?>
+                <div class="container">
+                    <!-- Thông tin chính -->
+                    <div class="row mb-5">
+                        <div class="col-lg-6 ms-auto text-end">
+                            <ul class="list-unstyled fs-5">
+                                <li class="detail-item" data-aos="fade-left" data-aos-delay="100">
+                                    <strong>Last Observed:</strong>
+                                    <?= htmlspecialchars($comet->getLastObserved() ?? 'Unknown') ?>
+                                </li>
+                                <li class="detail-item" data-aos="fade-left" data-aos-delay="200">
+                                    <strong>Orbital Period:</strong>
+                                    <?= htmlspecialchars($comet->getOrbitalPeriodYears() !== null ? $comet->getOrbitalPeriodYears() . ' years' : 'Unknown') ?>
+                                </li>
+                                <li class="detail-item" data-aos="fade-left" data-aos-delay="300">
+                                    <strong>Key Features:</strong>
+                                    <?= htmlspecialchars($comet->getFeatures() ?? 'Not available') ?>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Mô tả chi tiết -->
+                    <div class="row" data-aos="fade-up" data-aos-delay="400">
+                        <div class="col-12">
+                            <h2 class="display-6 fw-semibold mb-3">Overview</h2>
+                            <p class="fs-5"><?= html_entity_decode(htmlspecialchars($comet->getDescription() ?? 'No description available.')) ?></p>
+                        </div>
+                    </div>
+
+                    <!-- Hình ảnh -->
+                    <div class="row mt-5 justify-content-center" data-aos="zoom-in" data-aos-delay="500">
+                        <div class="col-lg-6 text-center">
+                            <?php if ($comet->getImage()): ?>
+                                <img src="../<?= htmlspecialchars($comet->getImage()) ?>"
+                                    alt="<?= htmlspecialchars($comet->getName()) ?>"
+                                    class="img-fluid rounded shadow-sm comet-image mb-4">
+                            <?php else: ?>
+                                <img src="../assets/images/no-image.png"
+                                    alt="No image"
+                                    class="img-fluid rounded shadow-sm comet-image mb-4">
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                </div>
+            <?php else: ?>
+                <div class="text-center">
+                    <p class="text-muted">Comet not found.</p>
+                    <a href="CometPage.php" class="btn btn-primary">
+                        <i class="bi bi-arrow-left"></i> Back to Comets
+                    </a>
+                </div>
+            <?php endif; ?>
+        </div>
+    </section>
+
     <?php include '../includes/Footer.php'; ?>
 
     <script src="../vendor/jquery/jquery.min.js"></script>
