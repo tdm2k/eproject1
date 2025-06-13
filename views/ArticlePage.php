@@ -25,7 +25,6 @@ $articles = $model->getAllArticles();
             color: white;
             text-shadow: 2px 2px 4px #000;
         }
-
         .bg-article .overlay {
             position: absolute;
             inset: 0;
@@ -36,62 +35,23 @@ $articles = $model->getAllArticles();
             position: relative;
             z-index: 1;
         }
-
         .article-intro {
-            padding: 60px 0;
+            padding: 60px 0 30px;
         }
-        .article-group {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin-top: 30px;
+        .article-item {
+            margin-bottom: 40px;
         }
-        .article-card {
-            position: relative;
-            overflow: hidden;
-            border-radius: 16px;
-            height: 350px;
-            cursor: pointer;
-            transition: 0.5s;
-        }
-        .article-card img {
+        .article-item img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: 0.5s;
+            border-radius: 12px;
         }
-        .article-card .layer {
-            position: absolute;
-            bottom: 0;
-            width: 100%;
-            height: 75%;
-            background: linear-gradient(to top, rgba(0,0,0,1), rgba(0,0,0,0));
-            opacity: 0;
-            transition: 0.3s;
+        .article-item .content h4 {
+            font-weight: bold;
         }
-        .article-card .info {
-            position: absolute;
-            bottom: -50%;
-            left: 0;
-            right: 0;
-            padding: 15px;
-            color: white;
-            opacity: 0;
-            transition: 0.5s bottom, 1.5s opacity;
-        }
-        .article-card:hover img,
-        .article-card:hover .layer {
-            transform: scale(1.05);
-        }
-        .article-card:hover .layer {
-            opacity: 1;
-        }
-        .article-card:hover .info {
-            bottom: 0;
-            opacity: 1;
-        }
-        .article-group:hover .article-card:not(:hover) {
-            filter: blur(3px);
+        .article-item .content p {
+            color: #555;
         }
     </style>
 </head>
@@ -120,27 +80,29 @@ $articles = $model->getAllArticles();
     <!-- Article list -->
     <section>
         <div class="container">
+            <h3 class="mb-4 text-dark" data-aos="fade-right">Below are the latest articles:</h3>
+
             <?php if (!empty($articles)): ?>
-                <div class="article-group">
-                    <?php foreach ($articles as $article): ?>
-                        <div class="article-card">
-                            <a href="ArticleDetail.php?id=<?= $article['id'] ?>">
-                                <img src="<?= htmlspecialchars($article['image_url']) ?>" alt="<?= htmlspecialchars($article['title']) ?>">
-                                <div class="layer"></div>
-                                <div class="info">
-                                    <h5><?= htmlspecialchars($article['title']) ?></h5>
-                                    <p>
-                                        <?php
-                                            $desc = strip_tags($article['content']);
-                                            echo strlen($desc) > 100 ? substr($desc, 0, 100) . '...' : $desc;
-                                        ?>
-                                    </p>
-                                    <a href="ArticleDetail.php?id=<?= $article['id'] ?>" class="btn btn-sm btn-light mt-2">Read more</a>
-                                </div>
+                <?php foreach ($articles as $article): ?>
+                    <div class="row article-item" data-aos="fade-up" data-aos-delay="100">
+                        <div class="col-md-4">
+                            <img src="<?= htmlspecialchars($article['image_url']) ?>" alt="<?= htmlspecialchars($article['title']) ?>">
+                        </div>
+                        <div class="col-md-8 content">
+                            <h4><?= htmlspecialchars($article['title']) ?></h4>
+                            <p>
+                                <?php
+                                    $desc = strip_tags($article['content']);
+                                    echo strlen($desc) > 200 ? substr($desc, 0, 200) . '...' : $desc;
+                                ?>
+                            </p>
+                            <a href="ArticleDetail.php?id=<?= $article['id'] ?>" class="btn btn-outline-primary btn-sm">
+                                Read more <i class="bi bi-arrow-right-circle"></i>
                             </a>
                         </div>
-                    <?php endforeach; ?>
-                </div>
+                    </div>
+                    <hr>
+                <?php endforeach; ?>
             <?php else: ?>
                 <p class="text-muted text-center">No articles available.</p>
             <?php endif; ?>

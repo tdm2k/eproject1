@@ -12,6 +12,7 @@ require_once '../models/ConstellationModel.php';
 
 $model = new ConstellationModel();
 $controller = new ConstellationController($model);
+
 $action = $_GET['action'] ?? null;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -22,7 +23,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     exit;
 }
 
-$constellations = $controller->getAllConstellations();
+// Pagination setup
+$page = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
+$limit = 5;
+$offset = ($page - 1) * $limit;
+$total_items = $controller->countAll();
+$total_pages = ceil($total_items / $limit);
+
+$constellations = $controller->getPaginatedConstellations($limit, $offset);
 $constellation = null;
 if ($action === 'edit' && isset($_GET['id'])) {
     $constellation = $controller->getConstellationById($_GET['id']);
@@ -72,7 +80,7 @@ if ($action === 'edit' && isset($_GET['id'])) {
                 <div class="mb-3">
                     <label class="form-label">Category</label>
                     <select id="category_id" name="category_id">
-                        <option value="2">Constellation</option>
+                        <option value="2" <?= (isset($constellation['category_id']) && $constellation['category_id'] == 2) ? 'selected' : '' ?>>Constellation</option>
                     </select>
                 </div>
                 <div class="mb-3">
@@ -126,6 +134,35 @@ if ($action === 'edit' && isset($_GET['id'])) {
                 <?php endforeach; ?>
                 </tbody>
             </table>
+
+            <!-- Pagination -->
+            <nav>
+                <ul class="pagination justify-content-center">
+                    <li class="page-item <?= $page <= 1 ? 'disabled' : '' ?>">
+                        <a class="page-link" href="?page=<?= $page - 1 ?>" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+
+                    <?php
+                    $start = max(1, $page - 2);
+                    $end = min($total_pages, $page + 2);
+                    if ($start > 1) echo '<li class="page-item disabled"><span class="page-link">...</span></li>';
+                    for ($i = $start; $i <= $end; $i++): ?>
+                        <li class="page-item <?= $i === $page ? 'active' : '' ?>">
+                            <a class="page-link" href="?page=<?= $i ?>"><?= $i ?></a>
+                        </li>
+                    <?php endfor;
+                    if ($end < $total_pages) echo '<li class="page-item disabled"><span class="page-link">...</span></li>';
+                    ?>
+
+                    <li class="page-item <?= $page >= $total_pages ? 'disabled' : '' ?>">
+                        <a class="page-link" href="?page=<?= $page + 1 ?>" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
         <?php endif; ?>
     </main>
 

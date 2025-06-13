@@ -51,4 +51,17 @@ class ConstellationModel {
         $stmt = $this->conn->prepare("DELETE FROM constellations WHERE id = ?");
         return $stmt->execute([$id]);
     }
+
+    public function countAll() {
+        $stmt = $this->conn->query("SELECT COUNT(*) FROM constellations");
+        return (int)$stmt->fetchColumn();
+    }
+
+    public function findPage($limit, $offset) {
+        $stmt = $this->conn->prepare("SELECT * FROM constellations ORDER BY id DESC LIMIT :limit OFFSET :offset");
+        $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+        $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }

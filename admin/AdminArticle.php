@@ -23,7 +23,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     exit;
 }
 
-$articles = $model->getAllArticles();
+// Phân trang
+$page = isset($_GET['page']) ? max(1, intval($_GET['page'])) : 1;
+$limit = 5;
+$offset = ($page - 1) * $limit;
+$totalArticles = $model->getTotalArticles();
+$totalPages = ceil($totalArticles / $limit);
+$articles = $model->getAllArticlesPaginated($limit, $offset);
+
 $article = null;
 if ($action === 'edit' && isset($_GET['id'])) {
     $article = $model->getArticleById($_GET['id']);
@@ -36,7 +43,14 @@ if ($action === 'edit' && isset($_GET['id'])) {
     <title>Space Dot Com | Admin</title>
     <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <style>.main-page-content { margin-left: 280px; }</style>
+    <style>
+        .main-page-content { margin-left: 280px; }
+        .pagination-wrapper {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+    </style>
 </head>
 <body>
 <div class="main-page-content d-flex flex-column min-vh-100">
@@ -61,7 +75,7 @@ if ($action === 'edit' && isset($_GET['id'])) {
                 </div>
                 <div class="mb-3">
                     <label for="image_url" class="form-label">Image URL</label>
-                    <input type="text" name="image_url" id="image_url" class="form-control" placeholder="Example: https://example.com/image.jpg or images/photo.jpg" value="<?= htmlspecialchars($article['image_url'] ?? '') ?>">
+                    <input type="text" name="image_url" id="image_url" class="form-control" value="<?= htmlspecialchars($article['image_url'] ?? '') ?>">
                     <?php if (!empty($article['image_url'])): ?>
                         <img src="<?= htmlspecialchars($article['image_url']) ?>" class="mt-2" width="150">
                     <?php endif; ?>
@@ -92,8 +106,33 @@ if ($action === 'edit' && isset($_GET['id'])) {
                 <?php endforeach; ?>
                 </tbody>
             </table>
+
+            <?php if ($totalPages > 1): ?>
+                <div class="pagination-wrapper">
+                    <nav>
+                        <ul class="pagination">
+                            <?php if ($page > 1): ?>
+                                <li class="page-item">
+                                    <a class="page-link" href="?page=<?= $page - 1 ?>"><i class="bi bi-chevron-left"></i></a>
+                                </li>
+                            <?php endif; ?>
+                            <?php for ($i = 1; $i <= $totalPages; $i++): ?>
+                                <li class="page-item <?= ($i === $page) ? 'active' : '' ?>">
+                                    <a class="page-link" href="?page=<?= $i ?>"><?= $i ?></a>
+                                </li>
+                            <?php endfor; ?>
+                            <?php if ($page < $totalPages): ?>
+                                <li class="page-item">
+                                    <a class="page-link" href="?page=<?= $page + 1 ?>"><i class="bi bi-chevron-right"></i></a>
+                                </li>
+                            <?php endif; ?>
+                        </ul>
+                    </nav>
+                </div>
+            <?php endif; ?>
         <?php endif; ?>
     </main>
+
     <footer class="mt-auto"><?php include('../admin/includes/AdminFooter.php'); ?></footer>
 </div>
 

@@ -36,4 +36,12 @@ class ConstellationController {
     public function getConstellationById($id) {
         return $this->model->getConstellationById($id);
     }
+
+    public function countAll() {
+        return $this->model->countAll();
+    }
+
+    public function getPaginatedConstellations($limit, $offset) {
+        return $this->model->findPage($limit, $offset);
+    }
 }

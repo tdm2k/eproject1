@@ -42,7 +42,7 @@ $constellations = $model->getAllConstellations();
   }
   .constellation-group {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
     gap: 20px;
     margin-top: 30px;
   }
@@ -50,7 +50,7 @@ $constellations = $model->getAllConstellations();
     position: relative;
     overflow: hidden;
     border-radius: 16px;
-    height: 350px;
+    height: 180px;
     cursor: pointer;
     background: #fff;
     box-shadow: 0 6px 15px rgb(0 0 0 / 0.1);
@@ -63,10 +63,10 @@ $constellations = $model->getAllConstellations();
   }
   .constellation-card img {
     width: 100%;
-    height: 190px;
+    height: 100%;
     object-fit: cover;
     transition: 0.5s transform;
-    border-radius: 16px 16px 0 0;
+    border-radius: 16px;
   }
   .constellation-card:hover img {
     transform: scale(1.05);
@@ -75,20 +75,22 @@ $constellations = $model->getAllConstellations();
     position: absolute;
     bottom: 0;
     width: 100%;
-    height: 75%;
-    background: linear-gradient(to top, rgba(0,0,0,1), rgba(0,0,0,0));
+    height: 100%;
+    background: linear-gradient(to top, rgba(0,0,0,0.9), rgba(0,0,0,0));
     opacity: 0;
     transition: 0.3s;
+    border-radius: 16px;
   }
   .constellation-card .info {
     position: absolute;
-    bottom: -50%;
+    bottom: -60%;
     left: 0;
     right: 0;
-    padding: 15px;
+    padding: 10px;
     color: white;
     opacity: 0;
     transition: 0.5s bottom, 1.5s opacity;
+    text-align: center;
   }
   .constellation-card:hover .layer {
     opacity: 1;
@@ -98,14 +100,15 @@ $constellations = $model->getAllConstellations();
     opacity: 1;
   }
   .constellation-group:hover .constellation-card:not(:hover) {
-    filter: blur(3px);
+    filter: blur(2px);
   }
   .info h5 {
-    margin-bottom: 0.75rem;
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
   }
   .info p {
-    font-size: 0.9rem;
-    line-height: 1.3;
+    font-size: 0.8rem;
+    line-height: 1.2;
   }
 </style>
 </head>
@@ -135,6 +138,7 @@ $constellations = $model->getAllConstellations();
 
   <section>
     <div class="container">
+      <h3 class="text-dark fw-bold mb-4" data-aos="fade-right">List of all constellations:</h3>
       <?php if (!empty($constellations)): ?>
       <div class="constellation-group" data-aos="fade-up" data-aos-delay="200">
         <?php foreach ($constellations as $c): ?>
@@ -151,10 +155,10 @@ $constellations = $model->getAllConstellations();
               <p>
                 <?php
                 $desc = strip_tags($c['description']);
-                echo strlen($desc) > 100 ? substr($desc, 0, 100) . '...' : $desc;
+                echo strlen($desc) > 80 ? substr($desc, 0, 80) . '...' : $desc;
                 ?>
               </p>
-              <span class="btn btn-sm btn-light mt-2">View Details</span>
+              <span class="btn btn-sm btn-light mt-1">View Details</span>
             </div>
           </a>
         </div>
