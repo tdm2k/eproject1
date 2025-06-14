@@ -9,23 +9,17 @@ class Video
     private ?string $url = null;
     private ?string $description = null;
     private ?string $thumbnail_url = null;
-    private ?DateTime $uploaded_at = null;
-    private array $categories = [];
 
     public function __construct(
         ?string $title = null,
         ?string $url = null,
         ?string $description = null,
-        ?string $thumbnail_url = null,
-        ?DateTime $uploaded_at = null,
-        array $categories = []
+        ?string $thumbnail_url = null
     ) {
         $this->title = $title;
         $this->url = $url;
         $this->description = $description;
         $this->thumbnail_url = $thumbnail_url;
-        $this->uploaded_at = $uploaded_at ?? new DateTime();
-        $this->categories = $categories;
     }
 
     // --- Getters ---
@@ -33,70 +27,91 @@ class Video
     {
         return $this->id;
     }
+
     public function getTitle(): ?string
     {
         return $this->title;
     }
+
     public function getUrl(): ?string
     {
         return $this->url;
     }
+
     public function getDescription(): ?string
     {
         return $this->description;
     }
+
     public function getThumbnailUrl(): ?string
     {
         return $this->thumbnail_url;
     }
-    public function getUploadedAt(): ?DateTime
+
+    // Thêm phương thức để tránh lỗi undefined method
+    public function getVideoUrl(): ?string
     {
-        return $this->uploaded_at;
+        return $this->getUrl();
     }
-    public function getCategories(): array
+
+    // --- NEW: Tự động lấy thumbnail từ URL YouTube nếu không có thumbnail ---
+    public function getAutoThumbnail(): ?string
     {
-        return $this->categories;
+        if (!$this->url) {
+            return null;
+        }
+
+        // Bắt video ID từ YouTube URL
+        preg_match('/(?:v=|\/)([0-9A-Za-z_-]{11})/', $this->url, $matches);
+        $videoId = $matches[1] ?? null;
+
+        if ($videoId) {
+            return "https://img.youtube.com/vi/{$videoId}/hqdefault.jpg";
+        }
+
+        return null;
     }
 
     // --- Setters ---
+    public function setId(?int $id): void
+    {
+        $this->id = $id;
+    }
+
     public function setTitle(?string $title): void
     {
         $this->title = $title;
     }
+
     public function setUrl(?string $url): void
     {
         $this->url = $url;
     }
+
     public function setDescription(?string $description): void
     {
         $this->description = $description;
     }
+
     public function setThumbnailUrl(?string $thumbnail_url): void
     {
         $this->thumbnail_url = $thumbnail_url;
     }
-    public function setUploadedAt(?DateTime $uploaded_at): void
-    {
-        $this->uploaded_at = $uploaded_at;
-    }
-    public function setCategories(array $categories): void
-    {
-        $this->categories = $categories;
-    }
 
-    // Phương thức load từ mảng
+    // --- Static Methods ---
     public static function fromArray(array $data): self
     {
-        $obj = new self(
+        $video = new self(
             $data['title'] ?? null,
             $data['url'] ?? null,
             $data['description'] ?? null,
-            $data['thumbnail_url'] ?? null,
-            isset($data['uploaded_at']) ? new DateTime($data['uploaded_at']) : null,
-            $data['categories'] ?? []
+            $data['thumbnail_url'] ?? null
         );
 
-        $obj->id = $data['id'] ?? null;
-        return $obj;
+        if (isset($data['id'])) {
+            $video->setId((int)$data['id']);
+        }
+
+        return $video;
     }
 }

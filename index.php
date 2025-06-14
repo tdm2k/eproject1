@@ -31,7 +31,7 @@ if (session_status() === PHP_SESSION_NONE) {
     </div>
 
     <section class="section">
-        <div class="position-relative" style="height: 100vh;" data-aos="zoom-in" data-aos-delay="100">
+        <div class="position-relative" style="height: 100vh;" data-aos="zoom-out-down" data-aos-delay="100">
             <img src="../assets/images/background-home.jpg" class="w-100 h-100 position-absolute top-0 start-0" style="object-fit: cover; z-index: 1;" alt="Background">
 
             <div class="position-absolute top-0 start-0 w-100 h-100 bg-dark bg-opacity-50" style="z-index: 2;"></div>
