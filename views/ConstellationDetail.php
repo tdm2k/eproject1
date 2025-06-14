@@ -16,7 +16,7 @@ if (!$constellation) die('Constellation not found.');
     <style>
         .constellation-image {
             width: 100%;
-            max-height: 300px;
+            max-height: 500px;
             object-fit: cover;
             border-radius: 8px;
             box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
@@ -66,7 +66,7 @@ if (!$constellation) die('Constellation not found.');
                         <div class="row mb-4">
                             <div class="col-md-6 mb-3 mb-md-0">
                                 <?php if (!empty($constellation['image'])): ?>
-                                    <img src="<?= htmlspecialchars($constellation['image']) ?>" alt="Constellation image" class="constellation-image" loading="lazy" decoding="async" />
+                                    <img src="../uploads/<?= htmlspecialchars($constellation['image']) ?>" alt="Constellation image" class="constellation-image" loading="lazy" decoding="async" />
                                 <?php endif; ?>
                             </div>
                             <div class="col-md-6">

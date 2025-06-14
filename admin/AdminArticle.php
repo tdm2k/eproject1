@@ -23,7 +23,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     exit;
 }
 
-// Phân trang
 $page = isset($_GET['page']) ? max(1, intval($_GET['page'])) : 1;
 $limit = 5;
 $offset = ($page - 1) * $limit;
@@ -61,7 +60,7 @@ if ($action === 'edit' && isset($_GET['id'])) {
 
         <?php if ($action === 'add' || $action === 'edit'): ?>
             <a href="AdminArticle.php" class="btn btn-secondary mb-3"><i class="bi bi-arrow-left"></i> Back to List</a>
-            <form method="POST">
+            <form method="POST" enctype="multipart/form-data">
                 <?php if ($action === 'edit' && isset($_GET['id'])): ?>
                     <input type="hidden" name="id" value="<?= htmlspecialchars($_GET['id']) ?>">
                 <?php endif; ?>
@@ -74,10 +73,10 @@ if ($action === 'edit' && isset($_GET['id'])) {
                     <textarea name="content" id="content" class="form-control" rows="6" required><?= htmlspecialchars($article['content'] ?? '') ?></textarea>
                 </div>
                 <div class="mb-3">
-                    <label for="image_url" class="form-label">Image URL</label>
-                    <input type="text" name="image_url" id="image_url" class="form-control" value="<?= htmlspecialchars($article['image_url'] ?? '') ?>">
+                    <label for="image_file" class="form-label">Image</label>
+                    <input type="file" name="image_file" id="image_file" class="form-control">
                     <?php if (!empty($article['image_url'])): ?>
-                        <img src="<?= htmlspecialchars($article['image_url']) ?>" class="mt-2" width="150">
+                        <img src="../uploads/<?= htmlspecialchars($article['image_url']) ?>" class="mt-2" width="150">
                     <?php endif; ?>
                 </div>
                 <button type="submit" class="btn btn-success"><i class="bi bi-save"></i> Save Article</button>
@@ -95,7 +94,7 @@ if ($action === 'edit' && isset($_GET['id'])) {
                         <td><?= htmlspecialchars($article['title']) ?></td>
                         <td>
                             <?php if (!empty($article['image_url'])): ?>
-                                <img src="<?= htmlspecialchars($article['image_url']) ?>" width="100">
+                                <img src="../uploads/<?= htmlspecialchars($article['image_url']) ?>" width="100">
                             <?php endif; ?>
                         </td>
                         <td>

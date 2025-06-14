@@ -13,11 +13,11 @@ $constellations = $model->getAllConstellations();
 <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet" />
 <style>
   .bg-constellation {
-    background-image: url('https://png.pngtree.com/thumb_back/fw800/back_our/20190622/ourmid/pngtree-fantasy-starry-sky-12-constellations-background-image_219283.jpg');
+    background-image: url('../assets/images/constellations.jpg');
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;
-    min-height: 500px;
+    min-height: 820px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -145,7 +145,7 @@ $constellations = $model->getAllConstellations();
         <div class="constellation-card">
           <a href="ConstellationDetail.php?id=<?= $c['id'] ?>" style="color: inherit; text-decoration: none; display: block; height: 100%; position: relative;">
             <?php if (!empty($c['image'])): ?>
-              <img src="<?= htmlspecialchars($c['image']) ?>" alt="<?= htmlspecialchars($c['name']) ?>" loading="lazy" decoding="async" />
+              <img src="../uploads/<?= htmlspecialchars($c['image']) ?>" alt="<?= htmlspecialchars($c['name']) ?>" loading="lazy" decoding="async" />
             <?php else: ?>
               <img src="https://via.placeholder.com/400x190?text=No+Image" alt="No image" />
             <?php endif; ?>

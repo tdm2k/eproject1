@@ -21,11 +21,11 @@ $totalPages = ceil($totalArticles / $limit);
     <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
     <style>
         .bg-article {
-            background-image: url('https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?auto=format&fit=crop&w=1470&q=80');
+            background-image: url('../assets/images/bg_article.jpg');
             background-repeat: no-repeat;
             background-size: cover;
             background-position: center;
-            min-height: 500px;
+            min-height: 820px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -94,7 +94,7 @@ $totalPages = ceil($totalArticles / $limit);
                 <?php foreach ($articles as $article): ?>
                     <div class="row article-item" data-aos="fade-up" data-aos-delay="100">
                         <div class="col-md-4">
-                            <img src="<?= htmlspecialchars($article['image_url']) ?>" alt="<?= htmlspecialchars($article['title']) ?>">
+                            <img src="../uploads/<?= htmlspecialchars($article['image_url']) ?>" alt="<?= htmlspecialchars($article['title']) ?>">
                         </div>
                         <div class="col-md-8 content">
                             <h4><?= htmlspecialchars($article['title']) ?></h4>

@@ -1,7 +1,9 @@
 <?php
 require_once __DIR__ . '/../models/ArticleModel.php';
+
 $articleId = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 if ($articleId <= 0) die('Invalid article ID.');
+
 $model = new ArticleModel();
 $article = $model->getArticleById($articleId);
 if (!$article) die('Article not found.');
@@ -60,7 +62,7 @@ if (!$article) die('Article not found.');
                     <div class="row mt-4">
                         <?php if (!empty($article['image_url'])): ?>
                             <div class="col-md-6 mb-3 mb-md-0">
-                                <img src="<?= htmlspecialchars($article['image_url']) ?>" alt="Article image" class="article-image" loading="lazy" decoding="async" />
+                                <img src="../uploads/<?= htmlspecialchars($article['image_url']) ?>" alt="Article image" class="article-image" loading="lazy" decoding="async" />
                             </div>
                         <?php endif; ?>
                         <div class="col-md-6 d-flex align-items-center">

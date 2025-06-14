@@ -8,25 +8,25 @@ class ConstellationController {
         $this->model = $model;
     }
 
-    public function handleRequest($action, $data) {
+    public function handleRequest($action, $data, $file = null) {
         switch ($action) {
             case 'add':
-                $this->model->addConstellation($data);
-                header('Location: AdminConstellation.php');
-                exit;
+                $this->model->addConstellation($data, $file);
+                break;
             case 'edit':
                 if (isset($data['id'])) {
-                    $this->model->updateConstellation($data['id'], $data);
+                    $this->model->updateConstellation($data['id'], $data, $file);
                 }
-                header('Location: AdminConstellation.php');
-                exit;
+                break;
             case 'delete':
                 if (isset($data['id'])) {
                     $this->model->deleteConstellation($data['id']);
                 }
-                header('Location: AdminConstellation.php');
-                exit;
+                break;
         }
+
+        header('Location: AdminConstellation.php');
+        exit;
     }
 
     public function getAllConstellations() {
