@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/../models/VideoModel.php';
+
 $model = new VideoModel();
 $videos = $model->getAll();
 ?>
@@ -19,16 +20,17 @@ $videos = $model->getAll();
 
         .bg-video-header {
             position: relative;
-            background-image: url('https://th.bing.com/th/id/OIP.aWyJNaX6_LSprOxJBqI6LAHaEE?w=337&h=185&c=7&r=0&o=7&dpr=1.5&pid=1.7&rm=3');
+            background-image: url('../assets/images/background-video.jpg');
             background-repeat: no-repeat;
             background-size: cover;
             background-position: center;
-            min-height: 500px;
+            min-height: 820px;
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
             text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.8);
+            animation: zoomIn 1.2s ease-out;
         }
 
         .bg-video-header::before {
@@ -41,6 +43,39 @@ $videos = $model->getAll();
         .bg-video-header .container {
             position: relative;
             z-index: 1;
+        }
+
+        @keyframes zoomIn {
+            from {
+                transform: scale(1.1);
+                opacity: 0;
+            }
+
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .video-header-text {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 1s ease-out forwards;
+            animation-delay: 1s;
+        }
+
+        .video-header-subtext {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 1s ease-out forwards;
+            animation-delay: 1.5s;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .video-intro {
@@ -58,7 +93,6 @@ $videos = $model->getAll();
             position: relative;
             overflow: hidden;
             border-radius: 16px;
-            height: 350px;
             background: #fff;
             box-shadow: 0 6px 15px rgb(0 0 0 / 0.1);
             transition: 0.5s;
@@ -83,38 +117,22 @@ $videos = $model->getAll();
             transform: scale(1.05);
         }
 
-        .video-card .layer {
-            position: absolute;
-            bottom: 0;
-            width: 100%;
-            height: 75%;
-            background: linear-gradient(to top, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0));
-            opacity: 0;
-            transition: 0.3s;
-        }
-
         .video-card .info {
-            position: absolute;
-            bottom: -50%;
-            left: 0;
-            right: 0;
-            padding: 15px;
+            background: rgba(0, 0, 0, 0.6);
             color: white;
-            opacity: 0;
-            transition: 0.5s bottom, 1.5s opacity;
+            padding: 15px;
+            transition: 0.3s;
+            flex-grow: 1;
         }
 
-        .video-card:hover .layer {
-            opacity: 1;
+        .video-card .info .desc,
+        .video-card .info .btn {
+            display: none;
         }
 
-        .video-card:hover .info {
-            bottom: 0;
-            opacity: 1;
-        }
-
-        .video-group:hover .video-card:not(:hover) {
-            filter: blur(3px);
+        .video-card:hover .info .desc,
+        .video-card:hover .info .btn {
+            display: block;
         }
 
         .info h5 {
@@ -129,16 +147,20 @@ $videos = $model->getAll();
         .info .btn {
             margin-top: 8px;
         }
+
+        .video-group:hover .video-card:not(:hover) {
+            filter: blur(3px);
+        }
     </style>
 </head>
 
 <body>
     <?php include('../includes/Header.php'); ?>
 
-    <section class="bg-video-header" data-aos="fade-down">
+    <section class="bg-video-header">
         <div class="container text-center">
-            <h1 class="display-4 fw-bold">Videos</h1>
-            <p class="lead">Explore the universe through stunning videos and scientific visuals.</p>
+            <h1 class="display-4 fw-bold video-header-text">Videos</h1>
+            <p class="lead video-header-subtext">Explore the universe through stunning videos and scientific visuals.</p>
         </div>
     </section>
 
@@ -161,7 +183,7 @@ $videos = $model->getAll();
                     <div class="video-group" data-aos="fade-up" data-aos-delay="200">
                         <?php foreach ($videos as $v): ?>
                             <div class="video-card">
-                                <a href="VideoDetailPage.php?id=<?= $v->getId() ?>" style="color: inherit; text-decoration: none; display: block; height: 100%;">
+                                <a href="VideoDetailPage.php?id=<?= $v->getId() ?>" style="color: inherit; text-decoration: none; display: block;">
                                     <?php
                                     $thumb = $v->getThumbnailUrl();
                                     $autoThumb = $v->getAutoThumbnail();
@@ -176,10 +198,9 @@ $videos = $model->getAll();
                                     ?>
 
                                     <img src="<?= $imgSrc ?>" alt="<?= htmlspecialchars($v->getTitle()) ?>" loading="lazy" />
-                                    <div class="layer"></div>
                                     <div class="info">
                                         <h5><?= htmlspecialchars($v->getTitle()) ?></h5>
-                                        <p>
+                                        <p class="desc">
                                             <?php
                                             $desc = strip_tags($v->getDescription());
                                             echo strlen($desc) > 100 ? substr($desc, 0, 100) . '...' : $desc;
