@@ -116,7 +116,7 @@ $items = [
         const dataDay = {
             labels: ['1 AM', '4 AM', '7 AM', '10 AM', '1 PM', '4 PM', '7 PM', '10 PM'],
             datasets: [{
-                label: 'Doanh thu',
+                label: 'Visits',
                 data: [5000, 7000, 10000, 12000, 15000, 13000, 9000, 6000],
                 fill: false,
                 borderColor: '#0d6efd',
@@ -130,7 +130,7 @@ $items = [
         const dataWeek = {
             labels: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
             datasets: [{
-                label: 'Doanh thu',
+                label: 'Visits',
                 data: [15500, 21500, 18000, 24000, 23500, 24300, 12000],
                 fill: false,
                 borderColor: '#0d6efd',
@@ -144,7 +144,7 @@ $items = [
         const dataMonth = {
             labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
             datasets: [{
-                label: 'Doanh thu',
+                label: 'Visits',
                 data: [80000, 95000, 75000, 110000],
                 fill: false,
                 borderColor: '#0d6efd',
