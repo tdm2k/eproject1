@@ -107,7 +107,7 @@ sort($categories);
                                         data-category-name="<?= $category->getName() ?>">
                                         <i class="bi bi-pencil-fill me-2"></i> Edit
                                     </a>
-                                    <a href="../controllers/CategoryController.php?action=delete&id=<?= $category->getId() ?>" class="btn btn-sm btn-danger" onclick="return confirm('Do you really want to delete this category?');">
+                                    <a href="../controllers/CategoryController.php?action=delete&id=<?= $category->getId() ?>" class="btn btn-sm btn-danger" onclick="return confirm('Delete this category will make all the products in this category unavailable. Do you really want to delete this category?');">
                                         <i class="bi bi-trash-fill me-2"></i> Delete
                                     </a>
                                 </td>
