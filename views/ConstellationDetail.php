@@ -14,6 +14,9 @@ if (!$constellation) die('Constellation not found.');
     <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <style>
+        body {
+            padding-top: 76px;
+        }
         .constellation-image {
             width: 100%;
             max-height: 500px;

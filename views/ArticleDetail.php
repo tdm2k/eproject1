@@ -16,6 +16,9 @@ if (!$article) die('Article not found.');
     <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <style>
+        body {
+            padding-top: 76px;
+        }  
         .article-image {
             width: 100%;
             height: 100%;

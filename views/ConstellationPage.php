@@ -12,8 +12,11 @@ $constellations = $model->getAllConstellations();
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
 <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet" />
 <style>
+  body {
+            padding-top: 76px;
+  }
   .bg-constellation {
-    background-image: url('../assets/images/constellations.jpg');
+    background-image: url('../assets/images/constellationpage.jpg');
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;
